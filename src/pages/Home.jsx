@@ -25,7 +25,7 @@ export default function Home() {
 // The five doors, full treatment — the intent router with room to breathe.
 function DoorsDetail() {
   return (
-    <section style={{ background: B.white, padding: "clamp(48px, 8vw, 88px) clamp(20px, 5vw, 40px)" }}>
+    <section id="doors" style={{ background: B.white, padding: "clamp(48px, 8vw, 88px) clamp(20px, 5vw, 40px)", scrollMarginTop: 72 }}>
       <div style={{ maxWidth: 1120, margin: "0 auto" }}>
         <p style={{ fontFamily: SANS, fontSize: 13, fontWeight: 600, letterSpacing: "0.12em", textTransform: "uppercase", color: B.orange, margin: "0 0 12px" }}>
           Five doors

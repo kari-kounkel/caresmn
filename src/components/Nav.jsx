@@ -33,14 +33,14 @@ export default function Nav() {
         <a
           href="/"
           onClick={(e) => { e.preventDefault(); go("/"); }}
-          style={{ textDecoration: "none", display: "flex", alignItems: "baseline", gap: 8 }}
+          style={{ textDecoration: "none", display: "flex", alignItems: "center", gap: 10 }}
+          aria-label="CARES Consulting — home"
         >
-          <span style={{ fontFamily: SERIF, fontWeight: 600, fontSize: 21, color: B.ink, letterSpacing: "-0.01em" }}>
-            CARES
-          </span>
-          <span style={{ fontFamily: SANS, fontWeight: 500, fontSize: 12, letterSpacing: "0.12em", textTransform: "uppercase", color: B.orange }}>
-            Consulting
-          </span>
+          <img
+            src="/cares-logo.png"
+            alt="CARES Consulting"
+            style={{ height: 40, width: "auto", display: "block" }}
+          />
         </a>
 
         {/* Desktop doors */}

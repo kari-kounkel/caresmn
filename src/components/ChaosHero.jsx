@@ -101,6 +101,38 @@ export default function ChaosHero() {
           train your people, and work ourselves out of a job.
         </p>
 
+        {/* JUST START — the whole philosophy in two words. You don't need it all
+            figured out; you just need to begin. */}
+        <div style={{ marginTop: "clamp(22px, 3vw, 30px)" }}>
+          <button
+            onClick={() => {
+              const el = document.getElementById("doors");
+              if (el) el.scrollIntoView({ behavior: prefersReduced() ? "auto" : "smooth", block: "start" });
+            }}
+            style={{
+              fontFamily: SANS,
+              fontSize: "clamp(15px, 2vw, 17px)",
+              fontWeight: 700,
+              letterSpacing: "0.04em",
+              color: "#fff",
+              background: B.orange,
+              border: "none",
+              borderRadius: 999,
+              padding: "15px 34px",
+              cursor: "pointer",
+              boxShadow: SHADOW_LIFT,
+              transition: "background 0.18s ease, transform 0.18s ease",
+            }}
+            onMouseEnter={(e) => { e.currentTarget.style.background = B.orangeBright; e.currentTarget.style.transform = "translateY(-2px)"; }}
+            onMouseLeave={(e) => { e.currentTarget.style.background = B.orange; e.currentTarget.style.transform = "translateY(0)"; }}
+          >
+            Just Start →
+          </button>
+          <p style={{ fontFamily: SERIF, fontStyle: "italic", fontSize: "clamp(15px, 2vw, 18px)", color: B.muted, margin: "14px 0 0" }}>
+            That's all it takes.
+          </p>
+        </div>
+
         {/* The stage — chaos resolves into the five doors. */}
         <div
           aria-hidden="true"
