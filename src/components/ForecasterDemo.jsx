@@ -32,7 +32,37 @@ export default function ForecasterDemo() {
   const ending = series[series.length - 1];
   const monthlyNet = (series[1] ?? series[0]) - series[0];
   const lowest = Math.min(...series);
+  const lowestIdx = series.indexOf(lowest);
+  const lowMonth = MONTHS[lowestIdx] === "Now" ? "right now" : MONTHS[lowestIdx];
   const healthy = lowest >= 0;
+
+  // The plain-English verdict — the whole point of the tool. Answers
+  // "am I going to be short, and when?" before it actually happens.
+  let verdict;
+  if (lowest < 0) {
+    verdict = {
+      tone: "bad",
+      headline: `You run out of cash in ${lowMonth}.`,
+      detail: `At this pace your balance drops to ${fmt(lowest)} — that's not making payroll.`,
+    };
+  } else if (lowest < expenses) {
+    verdict = {
+      tone: "warn",
+      headline: `It gets tight in ${lowMonth}.`,
+      detail: `Your thinnest month leaves about ${fmt(lowest)} — under one month of expenses in reserve.`,
+    };
+  } else {
+    verdict = {
+      tone: "good",
+      headline: `You're covered all year.`,
+      detail: `Even at your lowest (${lowMonth}) you've still got ${fmt(lowest)} in the bank.`,
+    };
+  }
+  const V = {
+    good: { fg: "#2f7d4f", bg: "#eaf6ee", line: "#cfe9d6", dot: "✓" },
+    warn: { fg: "#9a6a14", bg: "#fbf2dd", line: "#eedfb4", dot: "!" },
+    bad:  { fg: "#b4452b", bg: "#fbeae6", line: "#f0c9bf", dot: "!" },
+  }[verdict.tone];
 
   // chart geometry
   const W = 560, H = 200, P = 28;
@@ -48,12 +78,14 @@ export default function ForecasterDemo() {
   return (
     <section style={{ background: B.white, padding: "clamp(48px, 8vw, 88px) clamp(20px, 5vw, 40px)" }}>
       <div style={{ maxWidth: 1120, margin: "0 auto" }}>
-        <Eyebrow>Live demo · running right now</Eyebrow>
-        <h2 style={head()}>See your cash before it happens.</h2>
+        <Eyebrow>The kind of tool we build for you</Eyebrow>
+        <h2 style={head()}>Will you run out of cash this year?</h2>
         <p style={sub()}>
-          A working cash-flow forecaster that reads your accounting and your pipeline together.
-          Move the inputs — watch the runway change. This one runs on sandbox numbers; the real
-          one connects to <strong style={{ color: B.ink }}>your</strong> QuickBooks and CRM.
+          Most owners can't answer that until it's too late. This tool reads your accounting and
+          your sales pipeline <em>together</em> and tells you — months ahead — whether you'll be
+          short, and when. Drag any number and watch the answer change. It's running on sample
+          data here; the real one we build connects to <strong style={{ color: B.ink }}>your</strong>{" "}
+          QuickBooks and CRM.
         </p>
 
         <div
@@ -99,12 +131,18 @@ export default function ForecasterDemo() {
               flexDirection: "column",
             }}
           >
-            <div style={{ display: "flex", justifyContent: "space-between", flexWrap: "wrap", gap: 12, marginBottom: 8 }}>
-              <Stat label="Projected by Dec" value={fmt(ending)} tone={ending >= startCash ? B.orange : B.slateDeep} />
-              <Stat label="Net / month" value={(monthlyNet >= 0 ? "+" : "") + fmt(monthlyNet)} tone={monthlyNet >= 0 ? B.orange : "#b4452b"} />
-              <Stat label="Lowest point" value={fmt(lowest)} tone={healthy ? B.slate : "#b4452b"} />
+            {/* The verdict — the answer, stated plainly and first. */}
+            <div style={{ display: "flex", gap: 14, alignItems: "flex-start", padding: "16px 18px", borderRadius: 12, background: V.bg, border: `1px solid ${V.line}`, marginBottom: 18 }}>
+              <span style={{ flex: "0 0 auto", width: 30, height: 30, borderRadius: 999, background: V.fg, color: "#fff", fontFamily: SANS, fontWeight: 800, fontSize: 17, display: "flex", alignItems: "center", justifyContent: "center", lineHeight: 1 }}>{V.dot}</span>
+              <div>
+                <div style={{ fontFamily: SERIF, fontWeight: 600, fontSize: "clamp(19px, 2.6vw, 25px)", color: V.fg, lineHeight: 1.1, letterSpacing: "-0.01em" }}>{verdict.headline}</div>
+                <div style={{ fontFamily: SANS, fontSize: 14, lineHeight: 1.5, color: B.inkSoft, marginTop: 5 }}>{verdict.detail}</div>
+              </div>
             </div>
 
+            <p style={{ fontFamily: SANS, fontSize: 12, fontWeight: 600, letterSpacing: "0.04em", textTransform: "uppercase", color: B.faint, margin: "0 0 6px" }}>
+              Cash balance, next 6 months
+            </p>
             <svg viewBox={`0 0 ${W} ${H}`} style={{ width: "100%", height: "auto", display: "block" }} role="img" aria-label="Projected cash balance over six months">
               <defs>
                 <linearGradient id="cmFill" x1="0" y1="0" x2="0" y2="1">
@@ -112,40 +150,32 @@ export default function ForecasterDemo() {
                   <stop offset="100%" stopColor={B.orange} stopOpacity="0.01" />
                 </linearGradient>
               </defs>
-              {/* zero baseline */}
-              <line x1={P} y1={zeroY} x2={W - P} y2={zeroY} stroke={B.rule} strokeWidth="1" strokeDasharray="3 4" />
-              <text x={P} y={zeroY - 5} fontFamily={SANS} fontSize="9" fill={B.faint}>$0</text>
+              {/* the "running on empty" line */}
+              <line x1={P} y1={zeroY} x2={W - P} y2={zeroY} stroke={lowest < 0 ? "#d98b78" : B.rule} strokeWidth="1" strokeDasharray="3 4" />
+              <text x={W - P} y={zeroY - 5} textAnchor="end" fontFamily={SANS} fontSize="9.5" fill={lowest < 0 ? "#b4452b" : B.faint}>$0 — empty</text>
               <polygon points={areaPts} fill="url(#cmFill)" />
               <polyline points={linePts} fill="none" stroke={B.orange} strokeWidth="2.5" strokeLinejoin="round" strokeLinecap="round" />
               {series.map((v, i) => (
                 <g key={i}>
                   <circle cx={x(i)} cy={y(v)} r="3" fill={B.white} stroke={B.orange} strokeWidth="2" />
-                  <text x={x(i)} y={H - 8} textAnchor="middle" fontFamily={SANS} fontSize="10" fill={B.faint}>{MONTHS[i]}</text>
+                  <text x={x(i)} y={H - 8} textAnchor="middle" fontFamily={SANS} fontSize="10" fill={i === lowestIdx ? V.fg : B.faint} fontWeight={i === lowestIdx ? 700 : 400}>{MONTHS[i]}</text>
                 </g>
               ))}
+              {/* highlight the lowest point — the moment that matters */}
+              <circle cx={x(lowestIdx)} cy={y(lowest)} r="6" fill="none" stroke={V.fg} strokeWidth="2" />
+              <circle cx={x(lowestIdx)} cy={y(lowest)} r="2.5" fill={V.fg} />
             </svg>
 
-            <div
-              style={{
-                marginTop: 12,
-                padding: "10px 14px",
-                borderRadius: 10,
-                background: healthy ? B.warm : "#fbeae6",
-                border: `1px solid ${healthy ? "#f0d6c4" : "#f0c9bf"}`,
-                fontFamily: SANS,
-                fontSize: 13.5,
-                color: B.inkSoft,
-                lineHeight: 1.45,
-              }}
-            >
-              {healthy
-                ? "Runway holds across the whole horizon. Close more of that pipeline and the curve bends up."
-                : "Heads up — cash dips below zero before year-end. This is exactly the kind of thing a forecast catches early."}
+            {/* supporting numbers — secondary to the verdict */}
+            <div style={{ display: "flex", justifyContent: "space-between", flexWrap: "wrap", gap: 12, marginTop: 14, paddingTop: 14, borderTop: `1px solid ${B.rule}` }}>
+              <Stat label="Lowest point" value={fmt(lowest)} tone={V.fg} />
+              <Stat label="Net / month" value={(monthlyNet >= 0 ? "+" : "") + fmt(monthlyNet)} tone={monthlyNet >= 0 ? B.orange : "#b4452b"} />
+              <Stat label="Cash by Dec" value={fmt(ending)} tone={ending >= startCash ? B.orange : B.slateDeep} />
             </div>
 
-            <p style={{ fontFamily: SANS, fontSize: 11.5, color: B.faint, margin: "12px 0 0", lineHeight: 1.5 }}>
-              Sandbox demo — illustrative numbers, not connected to any real account. Your build reads
-              live QuickBooks + CRM data.
+            <p style={{ fontFamily: SANS, fontSize: 11.5, color: B.faint, margin: "14px 0 0", lineHeight: 1.5 }}>
+              Sample numbers, not a real account. The version we build for you reads your live
+              QuickBooks + CRM — same answer, your books.
             </p>
           </div>
         </div>
