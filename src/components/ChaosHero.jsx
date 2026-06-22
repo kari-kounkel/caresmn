@@ -3,6 +3,11 @@ import { B, SERIF, SANS, SHADOW, SHADOW_LIFT, DOOR_TINT } from "../brand";
 import { DOORS } from "../content/doors";
 import { go } from "../router";
 
+// Sticky-note palette + handwriting face — the scattered tiles read as a pile
+// of Post-its, not UI chips.
+const HAND = "'Caveat', 'Comic Sans MS', cursive";
+const POSTIT = ["#fff59d", "#ffc9de", "#bfe3ff", "#c8f3c0", "#ffd59e", "#e6d2ff"];
+
 // The chaos tiles — the everyday mess of running a business. Hand-placed so
 // the scatter reads the same every load (scattered, tilted, overlapping).
 const TILES = [
@@ -39,7 +44,9 @@ export default function ChaosHero() {
       setOrdered(true);
       return;
     }
-    const t = setTimeout(() => setOrdered(true), 2500);
+    // Let the scattered Post-its sit and jitter long enough to register —
+    // especially on phones where the whole thing flies by.
+    const t = setTimeout(() => setOrdered(true), 4400);
     return () => clearTimeout(t);
   }, []);
 
@@ -152,12 +159,12 @@ export default function ChaosHero() {
           aria-hidden="true"
           style={{
             position: "relative",
-            height: "clamp(260px, 34vw, 360px)",
+            height: "clamp(320px, 42vw, 380px)",
             margin: "clamp(28px, 4vw, 44px) auto 0",
             maxWidth: 920,
           }}
         >
-          {/* Chaos layer */}
+          {/* Chaos layer — a scattered pile of Post-it notes. */}
           {TILES.map((tile, i) => (
             <span
               key={tile.t}
@@ -166,24 +173,25 @@ export default function ChaosHero() {
                 position: "absolute",
                 left: `${tile.x}%`,
                 top: `${tile.y}%`,
-                fontFamily: SANS,
-                fontSize: "clamp(11px, 1.5vw, 14px)",
-                fontWeight: 500,
-                color: B.muted,
-                background: B.white,
-                border: `1px solid ${B.rule}`,
-                borderRadius: 8,
-                padding: "7px 12px",
+                fontFamily: HAND,
+                fontSize: "clamp(16px, 3vw, 21px)",
+                fontWeight: 700,
+                lineHeight: 1.05,
+                color: "#3a352a",
+                background: POSTIT[i % POSTIT.length],
+                border: "none",
+                borderRadius: 2,
+                padding: "12px 16px 14px",
                 whiteSpace: "nowrap",
-                boxShadow: SHADOW,
+                boxShadow: "1px 3px 7px rgba(40,30,10,0.20)",
                 transformOrigin: "center",
                 transform: ordered
-                  ? "translate(-50%,-50%) scale(0.6)"
+                  ? "translate(-50%,-50%) scale(0.5)"
                   : `translate(-50%,-50%) rotate(${tile.r}deg)`,
                 opacity: ordered ? 0 : 1,
-                transition: "transform 0.9s cubic-bezier(.2,.9,.2,1), opacity 0.7s ease",
-                transitionDelay: ordered ? `${i * 18}ms` : "0ms",
-                animationDelay: `${(i % 6) * 0.13}s`,
+                transition: "transform 1s cubic-bezier(.2,.9,.2,1), opacity 0.8s ease",
+                transitionDelay: ordered ? `${i * 22}ms` : "0ms",
+                animationDelay: `${(i % 6) * 0.17}s`,
                 pointerEvents: "none",
               }}
             >
@@ -231,13 +239,13 @@ export default function ChaosHero() {
 
       <style>{`
         @keyframes chaosJitter {
-          0%   { margin-top: 0px;  }
-          25%  { margin-top: -3px; }
-          50%  { margin-top: 2px;  }
-          75%  { margin-top: -2px; }
-          100% { margin-top: 0px;  }
+          0%   { margin: 0 0 0 0;     }
+          25%  { margin: -5px 0 0 3px;  }
+          50%  { margin: 4px 0 0 -3px;  }
+          75%  { margin: -3px 0 0 2px;  }
+          100% { margin: 0 0 0 0;     }
         }
-        .chaos-jitter { animation: chaosJitter 1.1s ease-in-out infinite; }
+        .chaos-jitter { animation: chaosJitter 1.7s ease-in-out infinite; }
         @media (prefers-reduced-motion: reduce) {
           .chaos-jitter { animation: none; }
         }
