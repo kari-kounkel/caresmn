@@ -1,12 +1,27 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { B, SERIF, SANS } from "../brand";
 import { DOORS } from "../content/doors";
 import { go } from "../router";
 
 // The five doors as a persistent top bar. Five items, no dropdowns — the
 // router itself, always in reach. External doors open their destination.
+//
+// The brand wordmark fades in only AFTER the big hero logo scrolls away, so
+// the logo (hero) and the wordmark (nav) are never in the same view.
 export default function Nav() {
   const [open, setOpen] = useState(false);
+  const [showBrand, setShowBrand] = useState(false);
+
+  useEffect(() => {
+    // On internal door pages there's no hero logo, so show the wordmark
+    // immediately; on the home page reveal it once scrolled past the hero.
+    const isHome = window.location.pathname.replace(/\/+$/, "") === "";
+    const onScroll = () => setShowBrand(!isHome || window.scrollY > 300);
+    onScroll();
+    window.addEventListener("scroll", onScroll, { passive: true });
+    return () => window.removeEventListener("scroll", onScroll);
+  }, []);
+
   return (
     <header
       style={{
@@ -33,14 +48,24 @@ export default function Nav() {
         <a
           href="/"
           onClick={(e) => { e.preventDefault(); go("/"); }}
-          style={{ textDecoration: "none", display: "flex", alignItems: "center", gap: 10 }}
           aria-label="CARES Consulting — home"
+          style={{
+            textDecoration: "none",
+            display: "flex",
+            alignItems: "baseline",
+            gap: 8,
+            opacity: showBrand ? 1 : 0,
+            transform: showBrand ? "translateY(0)" : "translateY(-4px)",
+            transition: "opacity 0.3s ease, transform 0.3s ease",
+            pointerEvents: showBrand ? "auto" : "none",
+          }}
         >
-          <img
-            src="/cares-logo.png"
-            alt="CARES Consulting"
-            style={{ height: 40, width: "auto", display: "block" }}
-          />
+          <span style={{ fontFamily: SERIF, fontWeight: 600, fontSize: 21, color: B.ink, letterSpacing: "-0.01em" }}>
+            CARES
+          </span>
+          <span style={{ fontFamily: SANS, fontWeight: 500, fontSize: 12, letterSpacing: "0.12em", textTransform: "uppercase", color: B.orange }}>
+            Consulting
+          </span>
         </a>
 
         {/* Desktop doors */}

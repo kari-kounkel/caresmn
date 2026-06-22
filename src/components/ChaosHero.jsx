@@ -55,10 +55,24 @@ export default function ChaosHero() {
         style={{
           maxWidth: 1120,
           margin: "0 auto",
-          padding: "clamp(48px, 8vw, 96px) clamp(20px, 5vw, 40px) clamp(40px, 6vw, 72px)",
+          padding: "clamp(32px, 5vw, 60px) clamp(20px, 5vw, 40px) clamp(40px, 6vw, 72px)",
           textAlign: "center",
         }}
       >
+        {/* The logo — large and centered, the crest at the top of the page.
+            It lives here and ONLY here; the nav wordmark fades in after it
+            scrolls away, so the two are never in view at once. */}
+        <img
+          src="/cares-logo.png"
+          alt="CARES Consulting"
+          style={{
+            height: "clamp(88px, 13vw, 132px)",
+            width: "auto",
+            display: "block",
+            margin: "0 auto clamp(20px, 3vw, 32px)",
+          }}
+        />
+
         {/* Headline — the stable anchor; the promise the animation acts out. */}
         <p
           style={{
@@ -71,7 +85,7 @@ export default function ChaosHero() {
             margin: "0 0 18px",
           }}
         >
-          CARES Consulting · Systems, not chaos
+          Systems, not chaos
         </p>
         <h1
           style={{
