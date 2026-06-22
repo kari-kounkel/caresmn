@@ -164,53 +164,66 @@ export default function ChaosHero() {
             maxWidth: 920,
           }}
         >
-          {/* Chaos layer — a scattered pile of Post-it notes. */}
-          {TILES.map((tile, i) => (
-            <span
-              key={tile.t}
-              className={ordered ? "" : "chaos-jitter"}
-              style={{
-                position: "absolute",
-                left: `${tile.x}%`,
-                top: `${tile.y}%`,
-                fontFamily: HAND,
-                fontSize: "clamp(16px, 3vw, 21px)",
-                fontWeight: 700,
-                lineHeight: 1.05,
-                color: "#3a352a",
-                background: POSTIT[i % POSTIT.length],
-                border: "none",
-                borderRadius: 2,
-                padding: "12px 16px 14px",
-                whiteSpace: "nowrap",
-                boxShadow: "1px 3px 7px rgba(40,30,10,0.20)",
-                transformOrigin: "center",
-                transform: ordered
-                  ? "translate(-50%,-50%) scale(0.5)"
-                  : `translate(-50%,-50%) rotate(${tile.r}deg)`,
-                opacity: ordered ? 0 : 1,
-                transition: "transform 1s cubic-bezier(.2,.9,.2,1), opacity 0.8s ease",
-                transitionDelay: ordered ? `${i * 22}ms` : "0ms",
-                animationDelay: `${(i % 6) * 0.17}s`,
-                pointerEvents: "none",
-              }}
-            >
-              {tile.t}
-            </span>
-          ))}
+          {/* Chaos layer — a scattered pile of Post-it notes that, on order,
+              FLY into their assigned door box and shrink into it. */}
+          {TILES.map((tile, i) => {
+            const col = i % 5;              // which of the 5 door boxes it flies into
+            const tx = 10 + col * 20;       // that column's center (%)
+            const d = ordered ? i * 24 : 0; // stagger the gather
+            return (
+              <span
+                key={tile.t}
+                className={ordered ? "" : "chaos-jitter"}
+                style={{
+                  position: "absolute",
+                  left: ordered ? `${tx}%` : `${tile.x}%`,
+                  top: ordered ? "50%" : `${tile.y}%`,
+                  zIndex: 2,
+                  fontFamily: HAND,
+                  fontSize: "clamp(16px, 3vw, 21px)",
+                  fontWeight: 700,
+                  lineHeight: 1.05,
+                  color: "#3a352a",
+                  background: POSTIT[i % POSTIT.length],
+                  border: "none",
+                  borderRadius: 2,
+                  padding: "12px 16px 14px",
+                  whiteSpace: "nowrap",
+                  boxShadow: "1px 3px 7px rgba(40,30,10,0.20)",
+                  transformOrigin: "center",
+                  transform: ordered
+                    ? "translate(-50%,-50%) scale(0.08)"
+                    : `translate(-50%,-50%) rotate(${tile.r}deg)`,
+                  opacity: ordered ? 0 : 1,
+                  // Notes fly + shrink for 0.9s; they only fade in the final
+                  // stretch (delay d+340ms) so you watch them dive into the box.
+                  transition:
+                    `left 0.9s cubic-bezier(.5,0,.2,1) ${d}ms,` +
+                    `top 0.9s cubic-bezier(.5,0,.2,1) ${d}ms,` +
+                    `transform 0.9s cubic-bezier(.5,0,.2,1) ${d}ms,` +
+                    `opacity 0.45s ease ${d + 340}ms`,
+                  animationDelay: `${(i % 6) * 0.17}s`,
+                  pointerEvents: "none",
+                }}
+              >
+                {tile.t}
+              </span>
+            );
+          })}
 
-          {/* Order layer — the five doors resolve in. */}
+          {/* Order layer — the five door boxes the notes gather into. */}
           <div
             style={{
               position: "absolute",
               inset: 0,
+              zIndex: 1,
               display: "grid",
               gridTemplateColumns: "repeat(5, 1fr)",
               gap: "clamp(8px, 1.4vw, 16px)",
               alignContent: "center",
               opacity: ordered ? 1 : 0,
-              transform: ordered ? "translateY(0)" : "translateY(14px)",
-              transition: "opacity 0.8s ease 0.25s, transform 0.8s cubic-bezier(.2,.9,.2,1) 0.25s",
+              transform: ordered ? "scale(1)" : "scale(0.92)",
+              transition: "opacity 0.7s ease 0.5s, transform 0.7s cubic-bezier(.2,.9,.3,1.2) 0.5s",
               pointerEvents: ordered ? "auto" : "none",
             }}
           >
