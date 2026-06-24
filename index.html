@@ -29,7 +29,10 @@
   <body>
     <div id="root"></div>
     <script type="module" src="/src/main.jsx"></script>
-    <!-- ASK™ widget — standard on every build -->
+    <!-- ASK™ widget (Lite / support mode — no email gate, simple "get in touch") -->
+    <script>
+      window.AskKariConfig = { mode: "support", site: "CARES Consulting" };
+    </script>
     <script src="https://chat.karikounkel.com/widget.js" defer></script>
   </body>
 </html>
