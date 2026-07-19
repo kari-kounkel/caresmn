@@ -10,7 +10,7 @@ body {
 }
 img, svg { display: block; max-width: 100%; }
 a { color: inherit; }
-:focus-visible { outline: 2px solid #c95f22; outline-offset: 2px; border-radius: 4px; }
+:focus-visible { outline: 2px solid #0080ff; outline-offset: 2px; border-radius: 4px; }
 input[type="range"] { height: 22px; }
 @media (prefers-reduced-motion: reduce) {
   html { scroll-behavior: auto; }

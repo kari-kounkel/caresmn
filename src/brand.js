@@ -1,55 +1,64 @@
 // caresmn.com — the empire's front door.
 // White, clean, very tidy. Generous whitespace = visual "order."
-// Palette is the canonical CARES identity (orange / slate / gold) pulled from
-// the live CARES Works surface, used as ACCENTS ONLY on a white page.
+// Palette REFRESHED 2026-07-18 to match tools.caresmn.com neon identity.
+// Same key names (orange/gold/slate) preserved so downstream code doesn't break —
+// the *values* now carry the neon (blue / pink / orange) sampled from the CARES
+// Works neon logo. If you're reading these key names literally, don't — they're
+// role slots: `orange` = primary CTA, `gold` = tertiary accent, `slate` = secondary.
 export const B = {
-  // base — pure, tidy white with two whisper-soft tints for raised panels
+  // base — pure, tidy white with two whisper-soft neon tints for raised panels
   white: "#ffffff",
-  paper: "#faf8f4",        // barely-warm page wash (used sparingly)
-  warm: "#fdf0e8",         // warm CARES tint — hero/accent panels
-  cool: "#eef0f6",         // cool slate tint — secondary panels
+  paper: "#fbfcff",        // barely-cool page wash (used sparingly)
+  warm: "#eef7ff",         // soft blue tint — hero/accent panels
+  cool: "#fff0f6",         // soft pink tint — secondary panels
   card: "#ffffff",         // cards sit white on tint
 
   // ink
-  ink: "#1e1e2a",          // headlines, body
-  inkSoft: "#3d4560",      // secondary text
-  muted: "#5a6481",        // muted body / labels
-  faint: "#7a7585",        // captions
+  ink: "#0a0a14",          // headlines, body
+  inkSoft: "#0f172a",      // secondary text
+  muted: "#64748b",        // muted body / labels
+  faint: "#94a3b8",        // captions
 
-  // accents (CARES identity)
-  orange: "#c95f22",       // primary CTA / action
-  orangeBright: "#e8773a", // hover
-  orangeDeep: "#a84a16",   // pressed
-  gold: "#C9A84C",         // tertiary accent / evidence
-  goldSoft: "#e0c060",
-  slate: "#5a6481",        // secondary accent
-  slateDeep: "#3d4560",
+  // accents (CARES Works neon identity)
+  orange: "#0080ff",       // primary CTA / action (was orange → NEON BLUE)
+  orangeBright: "#00b7ff", // hover (neon blue hot)
+  orangeDeep: "#0052cc",   // pressed (neon blue dark)
+  gold: "#ff8a2a",         // tertiary accent / evidence (was gold → NEON ORANGE)
+  goldSoft: "#ffb47a",
+  slate: "#ff2d8a",        // secondary accent (was slate → NEON PINK)
+  slateDeep: "#d91d6d",
 
   // hairlines
-  rule: "#ece8e0",         // hairline on white/paper
-  ruleCool: "#e2e6f0",     // hairline on cool panels
+  rule: "#e2e8f0",         // hairline on white/paper
+  ruleCool: "#dde7f5",     // hairline on cool panels
 };
 
-// Per-door accent — the 5 doors each carry a quiet tint so the router reads
+// Per-door accent — the 5 doors each carry a quiet NEON tint so the router reads
 // at a glance without shouting. Order matches the spec.
 export const DOOR_TINT = {
-  learn:     { ink: "#a84a16", tint: "#fdf0e8", line: "#f0d6c4" }, // orange
-  build:     { ink: "#3d4560", tint: "#eef0f6", line: "#dde2ee" }, // slate
-  resources: { ink: "#7a6a1f", tint: "#f7f1dd", line: "#e9dcb0" }, // gold
-  shop:      { ink: "#9c4f2a", tint: "#fbeae0", line: "#efd2c2" }, // terracotta
-  community: { ink: "#46506e", tint: "#eef1f7", line: "#dde2ef" }, // indigo-slate
+  learn:     { ink: "#0052cc", tint: "#eef7ff", line: "#c5e2ff" }, // neon blue
+  build:     { ink: "#d91d6d", tint: "#fff0f6", line: "#ffcfe0" }, // neon pink
+  resources: { ink: "#f06d0a", tint: "#fff4ea", line: "#ffd7b3" }, // neon orange
+  shop:      { ink: "#00b7ff", tint: "#e6f9ff", line: "#b3e6f7" }, // neon blue-hot
+  community: { ink: "#ff2d8a", tint: "#fff2f6", line: "#ffcfe0" }, // neon pink-warm
 };
 
-// Type — Fraunces (warm editorial serif = credible, human) for display,
-// Inter (clean neutral sans) for everything functional.
-export const SERIF = "'Fraunces', Georgia, serif";
+// Type — matches tools.caresmn.com neon system.
+// DM Serif Display for display (editorial serif), Figtree for body, DM Mono for meta.
+// Fraunces + Inter still available for pages that need the calmer feel.
+export const SERIF = "'DM Serif Display', 'Fraunces', Georgia, serif";
 export const SANS =
-  "'Inter', system-ui, -apple-system, Segoe UI, Roboto, sans-serif";
+  "'Figtree', 'Inter', system-ui, -apple-system, Segoe UI, Roboto, sans-serif";
+export const MONO = "'DM Mono', 'Courier New', monospace";
 
-// Soft, tidy elevation — no hard comic shadows here; this is the calm
-// "order" side of the brand.
-export const SHADOW = "0 1px 2px rgba(30,30,42,0.04), 0 8px 24px rgba(30,30,42,0.06)";
-export const SHADOW_LIFT = "0 2px 4px rgba(30,30,42,0.05), 0 18px 40px rgba(30,30,42,0.10)";
+// Soft, tidy elevation — kept as-is; the "order" side of the brand.
+export const SHADOW = "0 1px 2px rgba(10,10,20,0.04), 0 8px 24px rgba(10,10,20,0.06)";
+export const SHADOW_LIFT = "0 2px 4px rgba(10,10,20,0.05), 0 18px 40px rgba(10,10,20,0.10)";
+
+// Neon glow — for CTA buttons + accent panels (from tools.caresmn.com system)
+export const GLOW_BLUE = "0 4px 14px rgba(0,128,255,0.4), 0 0 24px rgba(0,128,255,0.15)";
+export const GLOW_PINK = "0 4px 14px rgba(255,45,138,0.4), 0 0 24px rgba(255,45,138,0.15)";
+export const GLOW_ORANGE = "0 4px 14px rgba(255,138,42,0.4), 0 0 24px rgba(255,138,42,0.15)";
 
 // Standard layout rails.
 export const MAXW = 1120;

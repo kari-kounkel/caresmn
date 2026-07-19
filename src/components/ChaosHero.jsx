@@ -70,7 +70,7 @@ export default function ChaosHero() {
             It lives here and ONLY here; the nav wordmark fades in after it
             scrolls away, so the two are never in view at once. */}
         <img
-          src="/cares-logo.png"
+          src="/cares-works-neon-logo.png"
           alt="CARES Consulting"
           style={{
             height: "clamp(88px, 13vw, 132px)",
