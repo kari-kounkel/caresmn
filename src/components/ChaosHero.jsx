@@ -77,6 +77,9 @@ export default function ChaosHero() {
             width: "auto",
             display: "block",
             margin: "0 auto clamp(24px, 3.5vw, 40px)",
+            borderRadius: 20,
+            boxShadow: "0 8px 32px rgba(0,128,255,0.28)",
+            background: "#ffffff",
           }}
         />
 
