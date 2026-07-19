@@ -70,13 +70,13 @@ export default function ChaosHero() {
             It lives here and ONLY here; the nav wordmark fades in after it
             scrolls away, so the two are never in view at once. */}
         <img
-          src="/cares-works-neon-logo.png"
-          alt="CARES Consulting"
+          src="/cares-consulting-logo.png"
+          alt="CARES Consulting Inc — Kari Hoglund Kounkel"
           style={{
-            height: "clamp(88px, 13vw, 132px)",
+            height: "clamp(220px, 32vw, 400px)",
             width: "auto",
             display: "block",
-            margin: "0 auto clamp(20px, 3vw, 32px)",
+            margin: "0 auto clamp(24px, 3.5vw, 40px)",
           }}
         />
 
