@@ -1,16 +1,17 @@
 // caresmn.com — the empire's front door.
 // White, clean, very tidy. Generous whitespace = visual "order."
-// Palette REFRESHED 2026-07-18 to match tools.caresmn.com neon identity.
+// Palette RE-REFRESHED 2026 — moved to TWO neon accents only: blue + green.
+// Kari's call: "too much color... blue neon and green neon."
 // Same key names (orange/gold/slate) preserved so downstream code doesn't break —
-// the *values* now carry the neon (blue / pink / orange) sampled from the CARES
-// Works neon logo. If you're reading these key names literally, don't — they're
-// role slots: `orange` = primary CTA, `gold` = tertiary accent, `slate` = secondary.
+// the *values* now carry blue + green only. If you're reading these key names
+// literally, don't — they're role slots: `orange` = primary CTA (blue),
+// `gold` = tertiary accent (green), `slate` = secondary (deep green).
 export const B = {
   // base — pure, tidy white with two whisper-soft neon tints for raised panels
   white: "#ffffff",
   paper: "#fbfcff",        // barely-cool page wash (used sparingly)
   warm: "#eef7ff",         // soft blue tint — hero/accent panels
-  cool: "#fff0f6",         // soft pink tint — secondary panels
+  cool: "#eefdf3",         // soft green tint — secondary panels (was pink)
   card: "#ffffff",         // cards sit white on tint
 
   // ink
@@ -19,28 +20,28 @@ export const B = {
   muted: "#64748b",        // muted body / labels
   faint: "#94a3b8",        // captions
 
-  // accents (CARES Works neon identity)
-  orange: "#0080ff",       // primary CTA / action (was orange → NEON BLUE)
-  orangeBright: "#00b7ff", // hover (neon blue hot)
-  orangeDeep: "#0052cc",   // pressed (neon blue dark)
-  gold: "#ff8a2a",         // tertiary accent / evidence (was gold → NEON ORANGE)
-  goldSoft: "#ffb47a",
-  slate: "#ff2d8a",        // secondary accent (was slate → NEON PINK)
-  slateDeep: "#d91d6d",
+  // accents — BLUE + GREEN only
+  orange: "#0080ff",       // primary CTA (semantic slot: NEON BLUE)
+  orangeBright: "#00b7ff", // hover
+  orangeDeep: "#0052cc",   // pressed
+  gold: "#22c55e",         // tertiary accent (semantic slot: NEON GREEN)
+  goldSoft: "#86efac",     // green hover / lighter
+  slate: "#16a34a",        // secondary accent (semantic slot: DEEP GREEN)
+  slateDeep: "#15803d",    // darker green for pressed
 
   // hairlines
   rule: "#e2e8f0",         // hairline on white/paper
   ruleCool: "#dde7f5",     // hairline on cool panels
 };
 
-// Per-door accent — the 5 doors each carry a quiet NEON tint so the router reads
-// at a glance without shouting. Order matches the spec.
+// Per-door accent — the 5 doors now alternate between blue and green tints only.
+// Order matches the spec. No more pink/orange in the door system.
 export const DOOR_TINT = {
   learn:     { ink: "#0052cc", tint: "#eef7ff", line: "#c5e2ff" }, // neon blue
-  build:     { ink: "#d91d6d", tint: "#fff0f6", line: "#ffcfe0" }, // neon pink
-  resources: { ink: "#f06d0a", tint: "#fff4ea", line: "#ffd7b3" }, // neon orange
-  shop:      { ink: "#00b7ff", tint: "#e6f9ff", line: "#b3e6f7" }, // neon blue-hot
-  community: { ink: "#ff2d8a", tint: "#fff2f6", line: "#ffcfe0" }, // neon pink-warm
+  build:     { ink: "#16a34a", tint: "#eefdf3", line: "#b8f0cf" }, // neon green
+  resources: { ink: "#00b7ff", tint: "#e6f9ff", line: "#b3e6f7" }, // neon blue-hot
+  shop:      { ink: "#15803d", tint: "#e9fbef", line: "#a7ecc0" }, // deep green
+  community: { ink: "#0080ff", tint: "#e8f4ff", line: "#c5e2ff" }, // neon blue (matches learn family)
 };
 
 // Type — matches tools.caresmn.com neon system.
@@ -55,10 +56,12 @@ export const MONO = "'DM Mono', 'Courier New', monospace";
 export const SHADOW = "0 1px 2px rgba(10,10,20,0.04), 0 8px 24px rgba(10,10,20,0.06)";
 export const SHADOW_LIFT = "0 2px 4px rgba(10,10,20,0.05), 0 18px 40px rgba(10,10,20,0.10)";
 
-// Neon glow — for CTA buttons + accent panels (from tools.caresmn.com system)
+// Neon glow — blue + green only. GLOW_PINK / GLOW_ORANGE kept as aliases so any
+// existing imports keep working; they now emit green.
 export const GLOW_BLUE = "0 4px 14px rgba(0,128,255,0.4), 0 0 24px rgba(0,128,255,0.15)";
-export const GLOW_PINK = "0 4px 14px rgba(255,45,138,0.4), 0 0 24px rgba(255,45,138,0.15)";
-export const GLOW_ORANGE = "0 4px 14px rgba(255,138,42,0.4), 0 0 24px rgba(255,138,42,0.15)";
+export const GLOW_GREEN = "0 4px 14px rgba(34,197,94,0.4), 0 0 24px rgba(34,197,94,0.15)";
+export const GLOW_PINK = GLOW_GREEN;   // legacy alias — retargeted to green
+export const GLOW_ORANGE = GLOW_GREEN; // legacy alias — retargeted to green
 
 // Standard layout rails.
 export const MAXW = 1120;
