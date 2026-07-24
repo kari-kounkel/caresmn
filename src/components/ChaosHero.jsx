@@ -63,71 +63,80 @@ export default function ChaosHero() {
           maxWidth: 1120,
           margin: "0 auto",
           padding: "clamp(32px, 5vw, 60px) clamp(20px, 5vw, 40px) clamp(40px, 6vw, 72px)",
-          textAlign: "center",
         }}
       >
-        {/* The logo — large and centered, the crest at the top of the page.
-            It lives here and ONLY here; the nav wordmark fades in after it
-            scrolls away, so the two are never in view at once. */}
-        <img
-          src="/cares-consulting-logo.png"
-          alt="CARES Consulting Inc — Kari Hoglund Kounkel"
+        {/* Lock-up: logo on the left, wordmark + pitch stacked on the right.
+            The mark and the words read as one brand mark at first glance.
+            The nav wordmark fades in only after this hero scrolls off. */}
+        <div
           style={{
-            height: "clamp(220px, 32vw, 400px)",
-            width: "auto",
-            display: "block",
-            margin: "0 auto clamp(24px, 3.5vw, 40px)",
-            borderRadius: 20,
-            boxShadow: "0 8px 32px rgba(0,128,255,0.28)",
-            background: "#ffffff",
-          }}
-        />
-
-        {/* Headline — the stable anchor; the promise the animation acts out. */}
-        <p
-          style={{
-            fontFamily: SANS,
-            fontSize: 13,
-            fontWeight: 600,
-            letterSpacing: "0.14em",
-            textTransform: "uppercase",
-            color: B.orange,
-            margin: "0 0 18px",
+            display: "flex",
+            alignItems: "center",
+            gap: "clamp(20px, 4vw, 44px)",
+            flexWrap: "wrap",
+            justifyContent: "flex-start",
+            marginBottom: "clamp(24px, 4vw, 36px)",
           }}
         >
-          Systems, not chaos
-        </p>
-        <h1
-          style={{
-            fontFamily: SERIF,
-            fontWeight: 600,
-            fontSize: "clamp(32px, 6vw, 58px)",
-            lineHeight: 1.05,
-            letterSpacing: "-0.02em",
-            color: B.ink,
-            margin: "0 auto",
-            maxWidth: 760,
-          }}
-        >
-          We turn business chaos<br />into working systems.
-        </h1>
-        <p
-          style={{
-            fontFamily: SANS,
-            fontSize: "clamp(16px, 2.2vw, 19px)",
-            lineHeight: 1.6,
-            color: B.inkSoft,
-            margin: "20px auto 0",
-            maxWidth: 560,
-          }}
-        >
-          Better systems, stronger teams, smarter workflows. We build the machine,
-          train your people, and work ourselves out of a job.
-        </p>
+          <img
+            src="/cares-consulting-logo.png"
+            alt="CARES Consulting Inc — Kari Hoglund Kounkel"
+            style={{
+              height: "clamp(160px, 22vw, 260px)",
+              width: "auto",
+              display: "block",
+              borderRadius: 20,
+              boxShadow: "0 8px 32px rgba(0,128,255,0.28)",
+              background: "#ffffff",
+              flexShrink: 0,
+            }}
+          />
+          <div style={{ flex: "1 1 340px", minWidth: 260, textAlign: "left" }}>
+            <p
+              style={{
+                fontFamily: SANS,
+                fontSize: 13,
+                fontWeight: 600,
+                letterSpacing: "0.14em",
+                textTransform: "uppercase",
+                color: B.orange,
+                margin: "0 0 14px",
+              }}
+            >
+              Systems, not chaos
+            </p>
+            <h1
+              style={{
+                fontFamily: SERIF,
+                fontWeight: 600,
+                fontSize: "clamp(28px, 4.8vw, 50px)",
+                lineHeight: 1.05,
+                letterSpacing: "-0.02em",
+                color: B.ink,
+                margin: 0,
+              }}
+            >
+              We turn business chaos<br />into working systems.
+            </h1>
+            <p
+              style={{
+                fontFamily: SANS,
+                fontSize: "clamp(15px, 2vw, 18px)",
+                lineHeight: 1.6,
+                color: B.inkSoft,
+                margin: "16px 0 0",
+                maxWidth: 520,
+              }}
+            >
+              Better systems, stronger teams, smarter workflows. We build the machine,
+              train your people, and work ourselves out of a job.
+            </p>
+          </div>
+        </div>
 
         {/* JUST START — the whole philosophy in two words. You don't need it all
             figured out; you just need to begin. */}
-        <div style={{ marginTop: "clamp(22px, 3vw, 30px)" }}>
+        <div style={{ marginTop: "clamp(4px, 1vw, 10px)", textAlign: "center" }}>
           <button
             onClick={() => {
               const el = document.getElementById("doors");
