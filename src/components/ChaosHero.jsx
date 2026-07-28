@@ -53,7 +53,11 @@ export default function ChaosHero() {
   return (
     <section
       style={{
-        background: `linear-gradient(180deg, ${B.warm} 0%, ${B.white} 78%)`,
+        background: `
+          radial-gradient(ellipse at 15% 0%, rgba(0,128,255,0.10), transparent 55%),
+          radial-gradient(ellipse at 85% 5%, rgba(34,197,94,0.07), transparent 55%),
+          linear-gradient(180deg, ${B.warm} 0%, ${B.white} 78%)
+        `,
         borderBottom: `1px solid ${B.rule}`,
         overflow: "hidden",
       }}
@@ -116,7 +120,7 @@ export default function ChaosHero() {
                 margin: 0,
               }}
             >
-              We turn business chaos<br />into working systems.
+              We turn business chaos<br />into <span style={{ background: `linear-gradient(90deg, ${B.orange}, ${B.slate})`, WebkitBackgroundClip: "text", WebkitTextFillColor: "transparent", backgroundClip: "text" }}>working systems.</span>
             </h1>
             <p
               style={{
