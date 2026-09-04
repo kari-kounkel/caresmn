@@ -183,9 +183,12 @@ export default function ChaosHero() {
           {/* Chaos layer — a scattered pile of Post-it notes that, on order,
               FLY into their assigned door box and shrink into it. */}
           {TILES.map((tile, i) => {
-            const col = i % 5;              // which of the 5 door boxes it flies into
-            const tx = 10 + col * 20;       // that column's center (%)
-            const d = ordered ? i * 24 : 0; // stagger the gather
+            const col  = i % 5;                 // which door it files under
+            const slot = Math.floor(i / 5);     // its depth in that door's stack
+            const tx   = 10 + col * 20;         // that column's center (%)
+            const ty   = 66 + slot * 5;         // tucked into the bottom of its tray
+            const lean = (slot % 2 ? 2.5 : -2.5) + (col - 2) * 0.6; // hand-filed, not machine-filed
+            const d    = ordered ? i * 24 : 0;  // stagger the gather
             return (
               <span
                 key={tile.t}
@@ -193,8 +196,8 @@ export default function ChaosHero() {
                 style={{
                   position: "absolute",
                   left: ordered ? `${tx}%` : `${tile.x}%`,
-                  top: ordered ? "50%" : `${tile.y}%`,
-                  zIndex: 2,
+                  top: ordered ? `${ty}%` : `${tile.y}%`,
+                  zIndex: ordered ? 3 + slot : 2,
                   fontFamily: HAND,
                   fontSize: "clamp(16px, 3vw, 21px)",
                   fontWeight: 700,
@@ -207,17 +210,18 @@ export default function ChaosHero() {
                   whiteSpace: "nowrap",
                   boxShadow: "1px 3px 7px rgba(40,30,10,0.20)",
                   transformOrigin: "center",
+                  // The notes are NOT thrown away. They fly under their door and
+                  // land as a small filed stack — same colour, same handwriting,
+                  // just squared up. The payoff has to be worth the mess.
                   transform: ordered
-                    ? "translate(-50%,-50%) scale(0.08)"
+                    ? `translate(-50%,-50%) scale(0.46) rotate(${lean}deg)`
                     : `translate(-50%,-50%) rotate(${tile.r}deg)`,
-                  opacity: ordered ? 0 : 1,
-                  // Notes fly + shrink for 0.9s; they only fade in the final
-                  // stretch (delay d+340ms) so you watch them dive into the box.
+                  opacity: 1,
+                  // Slight overshoot on landing so each one clicks into place.
                   transition:
-                    `left 0.9s cubic-bezier(.5,0,.2,1) ${d}ms,` +
-                    `top 0.9s cubic-bezier(.5,0,.2,1) ${d}ms,` +
-                    `transform 0.9s cubic-bezier(.5,0,.2,1) ${d}ms,` +
-                    `opacity 0.45s ease ${d + 340}ms`,
+                    `left 0.9s cubic-bezier(.4,0,.2,1) ${d}ms,` +
+                    `top 0.9s cubic-bezier(.34,1.3,.4,1) ${d}ms,` +
+                    `transform 0.9s cubic-bezier(.34,1.3,.4,1) ${d}ms`,
                   animationDelay: `${(i % 6) * 0.17}s`,
                   pointerEvents: "none",
                 }}
@@ -262,7 +266,7 @@ export default function ChaosHero() {
             transition: "opacity 0.6s ease 0.6s",
           }}
         >
-          Pick a door. Everything lives one step in — nothing piled on the porch.
+          Nothing got thrown out. It just finally has somewhere to live.
         </p>
       </div>
 
