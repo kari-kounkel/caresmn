@@ -6,6 +6,7 @@ import Nav from "../components/Nav";
 import ChaosHero from "../components/ChaosHero";
 import ForecasterDemo from "../components/ForecasterDemo";
 import EvidenceWall from "../components/EvidenceWall";
+import FounderCard from "../components/FounderCard";
 import Footer from "../components/Footer";
 
 export default function Home() {
@@ -16,6 +17,7 @@ export default function Home() {
       <DoorsDetail />
       <ForecasterDemo />
       <EvidenceWall />
+      <FounderCard />
       <CTAStrip />
       <Footer />
     </>
