@@ -52,7 +52,7 @@ export default function FounderCard() {
               margin: "0 0 12px",
             }}
           >
-            Who you're actually hiring
+            Who you're actually working with
           </p>
 
           <h2
@@ -95,7 +95,22 @@ export default function FounderCard() {
           >
             Thirty-five years of untangling other people's messes — books, payroll,
             systems, and the quiet chaos underneath a business that looks fine from
-            the road. You get a person who has done the work, not a framework.
+            the road.
+          </p>
+
+          <p
+            style={{
+              fontFamily: SANS,
+              fontSize: "clamp(15px, 2vw, 17px)",
+              lineHeight: 1.65,
+              color: B.inkSoft,
+              margin: "14px 0 0",
+              maxWidth: 480,
+            }}
+          >
+            And not a solo act. There's a <strong style={{ color: B.slate }}>team</strong> behind
+            CARES — which is the whole reason the systems keep running after we've
+            worked ourselves out of a job.
           </p>
 
           <p
