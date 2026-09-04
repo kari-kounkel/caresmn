@@ -66,3 +66,50 @@ export const GLOW_ORANGE = GLOW_GREEN; // legacy alias — retargeted to green
 // Standard layout rails.
 export const MAXW = 1120;
 export const PAD = "clamp(20px, 5vw, 40px)";
+
+// --- NEON, matching tools.caresmn.com -----------------------------------------
+// caresmn.com had the CARES Works *colors* but none of its treatment: flat grey
+// shadows and plain borders where the toolkit uses glowing outlines on white.
+// These are ported straight from `neon.jsx` in the cares-works repo so the two
+// sites read as one system.
+
+// Page wash — blue top-left, green top-right, on white. Low opacity so black
+// text on white stays readable.
+export const WASH_BG = `
+  radial-gradient(ellipse at 15% 0%, rgba(0,128,255,0.10), transparent 55%),
+  radial-gradient(ellipse at 85% 5%, rgba(34,197,94,0.07), transparent 55%),
+  #ffffff
+`;
+
+// Quieter wash for panels that sit mid-page.
+export const WASH_LITE = `
+  radial-gradient(ellipse at 10% 0%, rgba(0,128,255,0.06), transparent 45%),
+  radial-gradient(ellipse at 90% 20%, rgba(34,197,94,0.04), transparent 50%),
+  #ffffff
+`;
+
+// THE card: white interior, neon outline, layered glow. Spread it with {...neonBox()}.
+export const NEON_RGB = { blue: "0,128,255", green: "34,197,94", hot: "0,183,255" };
+export function neonBox(color = B.orange, rgb = NEON_RGB.blue, scale = 1) {
+  return {
+    background: B.white,
+    borderRadius: 14,
+    border: `2px solid ${color}`,
+    boxShadow: `0 0 ${20 * scale}px rgba(${rgb},0.28), 0 0 ${44 * scale}px rgba(${rgb},0.12), inset 0 0 18px rgba(${rgb},0.03)`,
+  };
+}
+
+// Button glow — sits under a solid neon fill.
+export const BTN_GLOW_BLUE = "0 4px 18px rgba(0,128,255,0.55), 0 0 40px rgba(0,128,255,0.25)";
+export const BTN_GLOW_GREEN = "0 4px 18px rgba(34,197,94,0.55), 0 0 40px rgba(34,197,94,0.25)";
+
+// Blue → green gradient fill for headline words.
+export const TEXT_GRAD = {
+  background: `linear-gradient(90deg, ${B.orange} 0%, ${B.slate} 100%)`,
+  WebkitBackgroundClip: "text",
+  WebkitTextFillColor: "transparent",
+  backgroundClip: "text",
+};
+
+// Big art (logo, portrait) gets a blue halo rather than a grey drop shadow.
+export const ART_GLOW = "0 8px 32px rgba(0,128,255,0.28)";

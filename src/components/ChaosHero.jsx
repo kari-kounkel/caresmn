@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { B, SERIF, SANS, SHADOW, SHADOW_LIFT, DOOR_TINT } from "../brand";
+import { B, SERIF, SANS, SHADOW, SHADOW_LIFT, DOOR_TINT , ART_GLOW } from "../brand";
 import { DOORS } from "../content/doors";
 import { go } from "../router";
 

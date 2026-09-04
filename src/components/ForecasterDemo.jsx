@@ -76,7 +76,7 @@ export default function ForecasterDemo() {
   const areaPts = `${P},${zeroY} ${linePts} ${W - P},${zeroY}`;
 
   return (
-    <section style={{ background: B.white, padding: "clamp(48px, 8vw, 88px) clamp(20px, 5vw, 40px)" }}>
+    <section style={{ background: "transparent", padding: "clamp(48px, 8vw, 88px) clamp(20px, 5vw, 40px)" }}>
       <div style={{ maxWidth: 1120, margin: "0 auto" }}>
         <Eyebrow>The kind of tool we build for you</Eyebrow>
         <h2 style={head()}>Will you run out of cash this year?</h2>
@@ -101,9 +101,10 @@ export default function ForecasterDemo() {
           {/* Controls */}
           <div
             style={{
-              background: B.cool,
-              border: `1px solid ${B.ruleCool}`,
-              borderRadius: 16,
+              background: B.white,
+              border: `2px solid ${B.slate}`,
+              borderRadius: 14,
+              boxShadow: "0 0 20px rgba(34,197,94,0.28), 0 0 44px rgba(34,197,94,0.12), inset 0 0 18px rgba(34,197,94,0.03)",
               padding: "clamp(18px, 2.4vw, 26px)",
             }}
           >
@@ -123,10 +124,10 @@ export default function ForecasterDemo() {
           <div
             style={{
               background: B.white,
-              border: `1px solid ${B.rule}`,
-              borderRadius: 16,
+              border: `2px solid ${B.orange}`,
+              borderRadius: 14,
               padding: "clamp(18px, 2.4vw, 26px)",
-              boxShadow: SHADOW,
+              boxShadow: "0 0 20px rgba(0,128,255,0.28), 0 0 44px rgba(0,128,255,0.12), inset 0 0 18px rgba(0,128,255,0.03)",
               display: "flex",
               flexDirection: "column",
             }}

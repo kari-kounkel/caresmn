@@ -6,7 +6,7 @@ import { EVIDENCE } from "../content/evidence";
 // Show, don't sell: every card is a thing that's real, not an adjective.
 export default function EvidenceWall() {
   return (
-    <section style={{ background: B.paper, borderTop: `1px solid ${B.rule}`, padding: "clamp(48px, 8vw, 88px) clamp(20px, 5vw, 40px)" }}>
+    <section style={{ background: "transparent", borderTop: `1px solid ${B.ruleCool}`, padding: "clamp(48px, 8vw, 88px) clamp(20px, 5vw, 40px)" }}>
       <div style={{ maxWidth: 1120, margin: "0 auto" }}>
         <p style={{ fontFamily: SANS, fontSize: 13, fontWeight: 600, letterSpacing: "0.12em", textTransform: "uppercase", color: B.orange, margin: "0 0 12px" }}>
           The evidence wall
@@ -49,10 +49,13 @@ function Card({ item }) {
         gap: 10,
         textDecoration: "none",
         background: B.card,
-        border: `1px solid ${B.rule}`,
+        // NeonBox construction, same as the toolkit's cards.
+        border: `2px solid ${B.orange}`,
         borderRadius: 14,
         padding: "20px 20px 18px",
-        boxShadow: hover ? SHADOW_LIFT : SHADOW,
+        boxShadow: hover
+          ? "0 0 28px rgba(0,128,255,0.36), 0 0 60px rgba(0,128,255,0.16), inset 0 0 18px rgba(0,128,255,0.03)"
+          : "0 0 20px rgba(0,128,255,0.28), 0 0 44px rgba(0,128,255,0.12), inset 0 0 18px rgba(0,128,255,0.03)",
         transform: hover ? "translateY(-3px)" : "translateY(0)",
         transition: "transform 0.2s ease, box-shadow 0.2s ease",
       }}
@@ -65,9 +68,9 @@ function Card({ item }) {
           fontWeight: 600,
           letterSpacing: "0.06em",
           textTransform: "uppercase",
-          color: B.orange,
-          background: B.warm,
-          border: `1px solid #f0d6c4`,
+          color: B.slate,
+          background: B.cool,
+          border: `1px solid ${B.goldSoft}`,
           borderRadius: 999,
           padding: "3px 10px",
         }}

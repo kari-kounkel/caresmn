@@ -1,4 +1,4 @@
-import { B, SERIF, SANS, SHADOW_LIFT } from "../brand";
+import { B, SERIF, SANS, ART_GLOW, TEXT_GRAD, NEON_RGB } from "../brand";
 
 // The person behind the systems. Sits after the evidence and before the CTA —
 // visitors see the proof, then who's actually doing the work, then the ask.
@@ -7,7 +7,7 @@ export default function FounderCard() {
   return (
     <section
       style={{
-        background: B.cool,
+        background: "transparent",
         borderTop: `1px solid ${B.ruleCool}`,
         padding: "clamp(44px, 7vw, 84px) clamp(20px, 5vw, 40px)",
       }}
@@ -36,7 +36,7 @@ export default function FounderCard() {
             borderRadius: 18,
             display: "block",
             objectFit: "cover",
-            boxShadow: SHADOW_LIFT,
+            boxShadow: ART_GLOW,
           }}
         />
 
@@ -103,8 +103,8 @@ export default function FounderCard() {
               fontFamily: SERIF,
               fontSize: "clamp(19px, 2.6vw, 26px)",
               lineHeight: 1.25,
-              color: B.slate,
               margin: "22px 0 0",
+              ...TEXT_GRAD,
             }}
           >
             Clear today. Stronger tomorrow.

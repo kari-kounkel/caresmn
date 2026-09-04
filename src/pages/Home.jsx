@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { B, SERIF, SANS, SHADOW, SHADOW_LIFT, DOOR_TINT } from "../brand";
+import { B, SERIF, SANS, SHADOW, SHADOW_LIFT, DOOR_TINT, NEON_RGB, BTN_GLOW_BLUE } from "../brand";
 import { DOORS } from "../content/doors";
 import { go } from "../router";
 import Nav from "../components/Nav";
@@ -27,7 +27,7 @@ export default function Home() {
 // The five doors, full treatment — the intent router with room to breathe.
 function DoorsDetail() {
   return (
-    <section id="doors" style={{ background: B.white, padding: "clamp(48px, 8vw, 88px) clamp(20px, 5vw, 40px)", scrollMarginTop: 72 }}>
+    <section id="doors" style={{ background: "transparent", padding: "clamp(48px, 8vw, 88px) clamp(20px, 5vw, 40px)", scrollMarginTop: 72 }}>
       <div style={{ maxWidth: 1120, margin: "0 auto" }}>
         <p style={{ fontFamily: SANS, fontSize: 13, fontWeight: 600, letterSpacing: "0.12em", textTransform: "uppercase", color: B.orange, margin: "0 0 12px" }}>
           Five doors
@@ -75,10 +75,14 @@ function DoorCard({ door }) {
         flexDirection: "column",
         textDecoration: "none",
         background: B.white,
-        border: `1px solid ${tint.line}`,
-        borderRadius: 16,
+        // Neon outline + layered glow, same construction as NeonBox in the
+        // toolkit. Each door keeps its own accent; hover just turns it up.
+        border: `2px solid ${tint.ink}`,
+        borderRadius: 14,
         padding: "clamp(20px, 2.4vw, 28px)",
-        boxShadow: hover ? SHADOW_LIFT : SHADOW,
+        boxShadow: hover
+          ? `0 0 28px ${tint.ink}55, 0 0 60px ${tint.ink}22, inset 0 0 18px ${tint.ink}08`
+          : `0 0 20px ${tint.ink}3d, 0 0 44px ${tint.ink}1f, inset 0 0 18px ${tint.ink}08`,
         transform: hover ? "translateY(-4px)" : "translateY(0)",
         transition: "transform 0.2s ease, box-shadow 0.2s ease",
       }}
@@ -108,7 +112,7 @@ function DoorCard({ door }) {
 // and to a real conversation.
 function CTAStrip() {
   return (
-    <section style={{ background: B.warm, borderTop: `1px solid #f0d6c4`, padding: "clamp(44px, 7vw, 80px) clamp(20px, 5vw, 40px)" }}>
+    <section style={{ background: "transparent", borderTop: `1px solid ${B.ruleCool}`, padding: "clamp(44px, 7vw, 80px) clamp(20px, 5vw, 40px)" }}>
       <div style={{ maxWidth: 760, margin: "0 auto", textAlign: "center" }}>
         <h2 style={{ fontFamily: SERIF, fontWeight: 600, fontSize: "clamp(24px, 4vw, 38px)", letterSpacing: "-0.02em", color: B.ink, margin: 0, lineHeight: 1.12 }}>
           Not sure which door is yours?
@@ -129,7 +133,7 @@ function CTAStrip() {
             textDecoration: "none",
             padding: "14px 28px",
             borderRadius: 10,
-            boxShadow: SHADOW,
+            boxShadow: BTN_GLOW_BLUE,
           }}
         >
           Start with the toolkit
