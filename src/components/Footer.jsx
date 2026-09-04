@@ -21,14 +21,14 @@ const CONTACT = [
 
 export default function Footer() {
   return (
-    <footer style={{ background: B.ink, color: "rgba(255,255,255,0.72)", padding: "clamp(40px, 6vw, 64px) clamp(20px, 5vw, 40px) 36px" }}>
+    <footer style={{ background: "transparent", borderTop: `1px solid ${B.ruleCool}`, color: B.inkSoft, padding: "clamp(40px, 6vw, 64px) clamp(20px, 5vw, 40px) 36px" }}>
       <div style={{ maxWidth: 1120, margin: "0 auto" }}>
         <div style={{ display: "flex", flexWrap: "wrap", gap: 24, justifyContent: "space-between", alignItems: "flex-start" }}>
           <div style={{ maxWidth: 360 }}>
-            <div style={{ fontFamily: SERIF, fontWeight: 600, fontSize: 22, color: "#fff", letterSpacing: "-0.01em" }}>
+            <div style={{ fontFamily: SERIF, fontWeight: 600, fontSize: 22, color: B.orange, letterSpacing: "-0.01em" }}>
               CARES Consulting
             </div>
-            <p style={{ fontFamily: SANS, fontSize: 14.5, lineHeight: 1.6, margin: "10px 0 0", color: "rgba(255,255,255,0.66)" }}>
+            <p style={{ fontFamily: SANS, fontSize: 14.5, lineHeight: 1.6, margin: "10px 0 0", color: B.muted }}>
               We turn business chaos into working systems — then work ourselves out of a job. Systems, teams, and AI used with intention.
             </p>
           </div>
@@ -39,7 +39,7 @@ export default function Footer() {
                 key={l.label}
                 href={l.href}
                 onClick={l.internal ? (e) => { e.preventDefault(); go(l.href); } : undefined}
-                style={{ fontFamily: SANS, fontSize: 14.5, color: "rgba(255,255,255,0.78)", textDecoration: "none" }}
+                style={{ fontFamily: SANS, fontSize: 14.5, color: B.inkSoft, textDecoration: "none" }}
               >
                 {l.label}
               </a>
@@ -47,19 +47,19 @@ export default function Footer() {
           </nav>
 
           <div style={{ display: "flex", flexDirection: "column", gap: 10 }}>
-            <div style={{ fontFamily: SANS, fontSize: 11.5, fontWeight: 600, letterSpacing: "0.14em", textTransform: "uppercase", color: "rgba(255,255,255,0.45)" }}>
+            <div style={{ fontFamily: SANS, fontSize: 11.5, fontWeight: 600, letterSpacing: "0.14em", textTransform: "uppercase", color: B.slate }}>
               Get in touch
             </div>
             {CONTACT.map((c) => (
               <a
                 key={c.label}
                 href={c.href}
-                style={{ fontFamily: SANS, fontSize: 14.5, color: "rgba(255,255,255,0.78)", textDecoration: "none" }}
+                style={{ fontFamily: SANS, fontSize: 14.5, color: B.inkSoft, textDecoration: "none" }}
               >
                 {c.label}
               </a>
             ))}
-            <div style={{ fontFamily: SANS, fontSize: 14.5, color: "rgba(255,255,255,0.6)" }}>
+            <div style={{ fontFamily: SANS, fontSize: 14.5, color: B.muted }}>
               Saint Paul, MN
             </div>
             <div style={{ fontFamily: SERIF, fontSize: 17, color: B.goldSoft, marginTop: 6 }}>
@@ -68,7 +68,7 @@ export default function Footer() {
           </div>
         </div>
 
-        <div style={{ height: 1, background: "rgba(255,255,255,0.12)", margin: "28px 0 18px" }} />
+        <div style={{ height: 1, background: B.ruleCool, margin: "28px 0 18px" }} />
 
         {/* Signature block — the same pill + IP notice every Kari-built product
             carries (see SignatureFooter in the cares-works repo).
@@ -103,7 +103,7 @@ export default function Footer() {
               fontFamily: MONO,
               fontSize: 10,
               letterSpacing: "0.06em",
-              color: "rgba(255,255,255,0.5)",
+              color: B.faint,
               lineHeight: 1.7,
             }}
           >

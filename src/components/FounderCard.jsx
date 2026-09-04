@@ -1,4 +1,4 @@
-import { B, SERIF, SANS, ART_GLOW, TEXT_GRAD, NEON_RGB } from "../brand";
+import { B, SERIF, SANS, ART_GLOW, TEXT_GRAD, WASH_LITE } from "../brand";
 
 // The person behind the systems. Sits after the evidence and before the CTA —
 // visitors see the proof, then who's actually doing the work, then the ask.
@@ -7,7 +7,7 @@ export default function FounderCard() {
   return (
     <section
       style={{
-        background: "transparent",
+        background: WASH_LITE,
         borderTop: `1px solid ${B.ruleCool}`,
         padding: "clamp(44px, 7vw, 84px) clamp(20px, 5vw, 40px)",
       }}
@@ -21,6 +21,13 @@ export default function FounderCard() {
           alignItems: "center",
           gap: "clamp(24px, 4vw, 52px)",
           justifyContent: "center",
+          // Same NeonBox construction as the cards above — green, so it reads as
+          // the human note between the blue proof wall and the blue CTA.
+          background: B.white,
+          border: `2px solid ${B.slate}`,
+          borderRadius: 14,
+          boxShadow: "0 0 20px rgba(34,197,94,0.28), 0 0 44px rgba(34,197,94,0.12), inset 0 0 18px rgba(34,197,94,0.03)",
+          padding: "clamp(26px, 3.4vw, 44px)",
         }}
       >
         <img
