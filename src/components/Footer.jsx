@@ -11,6 +11,14 @@ const LINKS = [
   { label: "Community — CARES Works", href: "https://tools.caresmn.com" },
 ];
 
+// Contact block — matches the business card exactly. If any of this changes,
+// the card and this list have to move together.
+const CONTACT = [
+  { label: "651.334.1300", href: "tel:+16513341300" },
+  { label: "kari@caresmn.com", href: "mailto:kari@caresmn.com" },
+  { label: "caresmn.com", href: "https://caresmn.com" },
+];
+
 export default function Footer() {
   return (
     <footer style={{ background: B.ink, color: "rgba(255,255,255,0.72)", padding: "clamp(40px, 6vw, 64px) clamp(20px, 5vw, 40px) 36px" }}>
@@ -37,6 +45,27 @@ export default function Footer() {
               </a>
             ))}
           </nav>
+
+          <div style={{ display: "flex", flexDirection: "column", gap: 10 }}>
+            <div style={{ fontFamily: SANS, fontSize: 11.5, fontWeight: 600, letterSpacing: "0.14em", textTransform: "uppercase", color: "rgba(255,255,255,0.45)" }}>
+              Get in touch
+            </div>
+            {CONTACT.map((c) => (
+              <a
+                key={c.label}
+                href={c.href}
+                style={{ fontFamily: SANS, fontSize: 14.5, color: "rgba(255,255,255,0.78)", textDecoration: "none" }}
+              >
+                {c.label}
+              </a>
+            ))}
+            <div style={{ fontFamily: SANS, fontSize: 14.5, color: "rgba(255,255,255,0.6)" }}>
+              Saint Paul, MN
+            </div>
+            <div style={{ fontFamily: SERIF, fontSize: 17, color: B.goldSoft, marginTop: 6 }}>
+              Clear today. Stronger tomorrow.
+            </div>
+          </div>
         </div>
 
         <div style={{ height: 1, background: "rgba(255,255,255,0.12)", margin: "28px 0 18px" }} />
