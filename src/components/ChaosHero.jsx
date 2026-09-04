@@ -1,5 +1,5 @@
-import { useEffect, useState } from "react";
-import { B, SERIF, SANS, SHADOW, SHADOW_LIFT, DOOR_TINT , ART_GLOW } from "../brand";
+import { useEffect, useLayoutEffect, useRef, useState } from "react";
+import { B, SERIF, SANS, SHADOW, DOOR_TINT, ART_GLOW } from "../brand";
 import { DOORS } from "../content/doors";
 import { go } from "../router";
 
@@ -8,24 +8,29 @@ import { go } from "../router";
 const HAND = "'Caveat', 'Comic Sans MS', cursive";
 const POSTIT = ["#fff59d", "#ffc9de", "#bfe3ff", "#c8f3c0", "#ffd59e", "#e6d2ff"];
 
-// The chaos tiles — the everyday mess of running a business. Hand-placed so
-// the scatter reads the same every load (scattered, tilted, overlapping).
+// The chaos tiles — the everyday mess of running a business. Hand-placed so the
+// scatter reads the same every load. x/y are percentages of the stage; they sit
+// over the left-hand "desk" so the cabinet on the right stays clear.
 const TILES = [
-  { t: "Sticky notes", x: 6,  y: 8,  r: -11 },
-  { t: "Spreadsheets", x: 70, y: 4,  r: 9 },
-  { t: "Payroll",      x: 38, y: 2,  r: -5 },
-  { t: "SOPs",         x: 84, y: 30, r: 14 },
-  { t: "Prompts",      x: 2,  y: 40, r: 7 },
-  { t: "Invoices",     x: 52, y: 30, r: -13 },
-  { t: "Apps",         x: 24, y: 26, r: 12 },
-  { t: "Emails",       x: 90, y: 62, r: -8 },
-  { t: "Passwords",    x: 12, y: 70, r: 10 },
-  { t: "Receipts",     x: 44, y: 64, r: -6 },
-  { t: "Tasks",        x: 66, y: 70, r: 13 },
-  { t: "Contracts",    x: 30, y: 84, r: -10 },
-  { t: "Schedules",    x: 78, y: 88, r: 6 },
-  { t: "Onboarding",   x: 56, y: 90, r: -12 },
+  { t: "Sticky notes", x: 11, y: 10, r: -11 },
+  { t: "Spreadsheets", x: 44, y: 6,  r: 9 },
+  { t: "Payroll",      x: 27, y: 30, r: -5 },
+  { t: "SOPs",         x: 57, y: 24, r: 14 },
+  { t: "Prompts",      x: 7,  y: 44, r: 7 },
+  { t: "Invoices",     x: 39, y: 50, r: -13 },
+  { t: "Apps",         x: 23, y: 66, r: 12 },
+  { t: "Emails",       x: 55, y: 70, r: -8 },
+  { t: "Passwords",    x: 9,  y: 82, r: 10 },
+  { t: "Receipts",     x: 35, y: 84, r: -6 },
+  { t: "Tasks",        x: 61, y: 46, r: 13 },
+  { t: "Contracts",    x: 19, y: 52, r: -10 },
+  { t: "Schedules",    x: 47, y: 90, r: 6 },
+  { t: "Onboarding",   x: 64, y: 8,  r: -12 },
 ];
+
+// Which drawer each note gets filed into — index into DOORS.
+const drawerOf = (i) => i % DOORS.length;
+const colorOf = (i) => POSTIT[i % POSTIT.length];
 
 function prefersReduced() {
   try {
@@ -36,19 +41,42 @@ function prefersReduced() {
 }
 
 export default function ChaosHero() {
-  // phase: "chaos" → tiles jitter; "order" → tiles snap away, doors resolve in.
+  // phase: "chaos" → notes jitter on the desk; "order" → they file themselves.
   const [ordered, setOrdered] = useState(false);
+  const [openKey, setOpenKey] = useState(null);
+
+  // Drawer positions measured in px relative to the stage, so each note lands
+  // in the real drawer instead of at a guessed percentage.
+  const stageRef = useRef(null);
+  const drawerRefs = useRef([]);
+  const [targets, setTargets] = useState(null);
 
   useEffect(() => {
     if (prefersReduced()) {
       setOrdered(true);
       return;
     }
-    // Let the scattered Post-its sit and jitter long enough to register —
-    // especially on phones where the whole thing flies by.
-    const t = setTimeout(() => setOrdered(true), 4400);
+    // Let the pile sit long enough to register before it tidies itself.
+    const t = setTimeout(() => setOrdered(true), 4200);
     return () => clearTimeout(t);
   }, []);
+
+  useLayoutEffect(() => {
+    const measure = () => {
+      const stage = stageRef.current;
+      if (!stage) return;
+      const s = stage.getBoundingClientRect();
+      const next = drawerRefs.current.map((el) => {
+        if (!el) return null;
+        const d = el.getBoundingClientRect();
+        return { x: d.left - s.left + d.width / 2, y: d.top - s.top + d.height / 2 };
+      });
+      if (next.length === DOORS.length && next.every(Boolean)) setTargets(next);
+    };
+    measure();
+    window.addEventListener("resize", measure);
+    return () => window.removeEventListener("resize", measure);
+  }, [openKey]);
 
   return (
     <section
@@ -56,9 +84,9 @@ export default function ChaosHero() {
         background: `
           radial-gradient(ellipse at 15% 0%, rgba(0,128,255,0.10), transparent 55%),
           radial-gradient(ellipse at 85% 5%, rgba(34,197,94,0.07), transparent 55%),
-          linear-gradient(180deg, ${B.warm} 0%, ${B.white} 78%)
+          linear-gradient(180deg, ${B.warm} 0%, ${B.white} 82%)
         `,
-        borderBottom: `1px solid ${B.rule}`,
+        borderBottom: `1px solid ${B.ruleCool}`,
         overflow: "hidden",
       }}
     >
@@ -66,36 +94,33 @@ export default function ChaosHero() {
         style={{
           maxWidth: 1120,
           margin: "0 auto",
-          padding: "clamp(32px, 5vw, 60px) clamp(20px, 5vw, 40px) clamp(40px, 6vw, 72px)",
+          padding: "clamp(28px, 4vw, 52px) clamp(20px, 5vw, 40px) clamp(36px, 5vw, 60px)",
         }}
       >
-        {/* Lock-up: logo on the left, wordmark + pitch stacked on the right.
-            The mark and the words read as one brand mark at first glance.
-            The nav wordmark fades in only after this hero scrolls off. */}
+        {/* Lock-up: logo + the promise. */}
         <div
           style={{
             display: "flex",
             alignItems: "center",
-            gap: "clamp(20px, 4vw, 44px)",
+            gap: "clamp(18px, 3vw, 38px)",
             flexWrap: "wrap",
-            justifyContent: "flex-start",
-            marginBottom: "clamp(24px, 4vw, 36px)",
+            marginBottom: "clamp(20px, 3vw, 34px)",
           }}
         >
           <img
             src="/cares-consulting-logo.png"
             alt="CARES Consulting Inc — Kari Hoglund Kounkel"
             style={{
-              height: "clamp(160px, 22vw, 260px)",
+              height: "clamp(120px, 15vw, 180px)",
               width: "auto",
               display: "block",
               borderRadius: 20,
-              boxShadow: "0 8px 32px rgba(0,128,255,0.28)",
+              boxShadow: ART_GLOW,
               background: "#ffffff",
               flexShrink: 0,
             }}
           />
-          <div style={{ flex: "1 1 340px", minWidth: 260, textAlign: "left" }}>
+          <div style={{ flex: "1 1 320px", minWidth: 260, textAlign: "left" }}>
             <p
               style={{
                 fontFamily: SANS,
@@ -104,7 +129,7 @@ export default function ChaosHero() {
                 letterSpacing: "0.14em",
                 textTransform: "uppercase",
                 color: B.orange,
-                margin: "0 0 14px",
+                margin: "0 0 12px",
               }}
             >
               Systems, not chaos
@@ -113,14 +138,25 @@ export default function ChaosHero() {
               style={{
                 fontFamily: SERIF,
                 fontWeight: 600,
-                fontSize: "clamp(28px, 4.8vw, 50px)",
+                fontSize: "clamp(28px, 4.4vw, 46px)",
                 lineHeight: 1.05,
                 letterSpacing: "-0.02em",
                 color: B.ink,
                 margin: 0,
               }}
             >
-              We turn business chaos<br />into <span style={{ background: `linear-gradient(90deg, ${B.orange}, ${B.slate})`, WebkitBackgroundClip: "text", WebkitTextFillColor: "transparent", backgroundClip: "text" }}>working systems.</span>
+              We turn business chaos<br />
+              into{" "}
+              <span
+                style={{
+                  background: `linear-gradient(90deg, ${B.orange}, ${B.slate})`,
+                  WebkitBackgroundClip: "text",
+                  WebkitTextFillColor: "transparent",
+                  backgroundClip: "text",
+                }}
+              >
+                working systems.
+              </span>
             </h1>
             <p
               style={{
@@ -128,7 +164,7 @@ export default function ChaosHero() {
                 fontSize: "clamp(15px, 2vw, 18px)",
                 lineHeight: 1.6,
                 color: B.inkSoft,
-                margin: "16px 0 0",
+                margin: "14px 0 0",
                 maxWidth: 520,
               }}
             >
@@ -138,74 +174,101 @@ export default function ChaosHero() {
           </div>
         </div>
 
-        {/* JUST START — the whole philosophy in two words. You don't need it all
-            figured out; you just need to begin. */}
-        <div style={{ marginTop: "clamp(4px, 1vw, 10px)", textAlign: "center" }}>
-          <button
-            onClick={() => {
-              const el = document.getElementById("doors");
-              if (el) el.scrollIntoView({ behavior: prefersReduced() ? "auto" : "smooth", block: "start" });
-            }}
-            style={{
-              fontFamily: SANS,
-              fontSize: "clamp(15px, 2vw, 17px)",
-              fontWeight: 700,
-              letterSpacing: "0.04em",
-              color: "#fff",
-              background: B.orange,
-              border: "none",
-              borderRadius: 999,
-              padding: "15px 34px",
-              cursor: "pointer",
-              boxShadow: SHADOW_LIFT,
-              transition: "background 0.18s ease, transform 0.18s ease",
-            }}
-            onMouseEnter={(e) => { e.currentTarget.style.background = B.orangeBright; e.currentTarget.style.transform = "translateY(-2px)"; }}
-            onMouseLeave={(e) => { e.currentTarget.style.background = B.orange; e.currentTarget.style.transform = "translateY(0)"; }}
-          >
-            Just Start →
-          </button>
-          <p style={{ fontFamily: SERIF, fontStyle: "italic", fontSize: "clamp(15px, 2vw, 18px)", color: B.muted, margin: "14px 0 0" }}>
-            That's all it takes.
-          </p>
-        </div>
-
-        {/* The stage — chaos resolves into the five doors. */}
+        {/* THE STAGE — a desk covered in notes on the left, and on the right the
+            cabinet they file themselves into. */}
         <div
-          aria-hidden="true"
+          ref={stageRef}
+          className="cm-stage"
           style={{
             position: "relative",
-            height: "clamp(320px, 42vw, 380px)",
-            margin: "clamp(28px, 4vw, 44px) auto 0",
-            maxWidth: 920,
+            display: "grid",
+            gridTemplateColumns: "minmax(0, 1fr) minmax(250px, 0.66fr)",
+            gap: "clamp(16px, 3vw, 40px)",
+            alignItems: "center",
+            minHeight: "clamp(340px, 38vw, 440px)",
           }}
         >
-          {/* Chaos layer — a scattered pile of Post-it notes that, on order,
-              FLY into their assigned door box and shrink into it. */}
+          {/* The desk. The call to action sits in the middle of the mess, and
+              the notes scatter around it — so the left column carries weight
+              instead of emptying out once everything files itself. */}
+          <div style={{ position: "relative", zIndex: 2, textAlign: "center" }}>
+            <button
+              type="button"
+              onClick={() => {
+                const el = document.getElementById("doors");
+                if (el) el.scrollIntoView({ behavior: prefersReduced() ? "auto" : "smooth", block: "start" });
+              }}
+              style={{
+                fontFamily: SANS,
+                fontSize: "clamp(15px, 2vw, 17px)",
+                fontWeight: 700,
+                color: "#fff",
+                background: B.orange,
+                border: "none",
+                padding: "15px 34px",
+                borderRadius: 999,
+                cursor: "pointer",
+                boxShadow: "0 4px 18px rgba(0,128,255,0.55), 0 0 40px rgba(0,128,255,0.25)",
+              }}
+            >
+              Just Start →
+            </button>
+            <p
+              style={{
+                fontFamily: SERIF,
+                fontStyle: "italic",
+                fontSize: "clamp(15px, 2vw, 18px)",
+                color: B.muted,
+                margin: "14px 0 0",
+              }}
+            >
+              That's all it takes.
+            </p>
+            <p
+              style={{
+                fontFamily: SANS,
+                fontSize: 13.5,
+                lineHeight: 1.55,
+                color: B.slate,
+                margin: "22px auto 0",
+                maxWidth: 300,
+                opacity: ordered ? 1 : 0,
+                transition: "opacity 0.7s ease 0.9s",
+              }}
+            >
+              Desk clear. Nothing got thrown out — open a drawer and it's all
+              still in there.
+            </p>
+          </div>
+
+          <Cabinet
+            openKey={openKey}
+            setOpenKey={setOpenKey}
+            drawerRefs={drawerRefs}
+            ordered={ordered}
+          />
+
+          {/* The notes, flying from the desk into their drawer. */}
           {TILES.map((tile, i) => {
-            const col  = i % 5;                 // which door it files under
-            const slot = Math.floor(i / 5);     // its depth in that door's stack
-            const tx   = 10 + col * 20;         // that column's center (%)
-            const ty   = 66 + slot * 5;         // tucked into the bottom of its tray
-            const lean = (slot % 2 ? 2.5 : -2.5) + (col - 2) * 0.6; // hand-filed, not machine-filed
-            const d    = ordered ? i * 24 : 0;  // stagger the gather
+            const target = targets && targets[drawerOf(i)];
+            const flying = ordered && !!target;
+            const d = ordered ? i * 22 : 0;
             return (
               <span
                 key={tile.t}
+                aria-hidden="true"
                 className={ordered ? "" : "chaos-jitter"}
                 style={{
                   position: "absolute",
-                  left: ordered ? `${tx}%` : `${tile.x}%`,
-                  top: ordered ? `${ty}%` : `${tile.y}%`,
-                  zIndex: ordered ? 3 + slot : 2,
-                  // Real Post-its are all the same square, whatever is written
-                  // on them — so the tile is a fixed square and the text wraps
-                  // and centres inside it rather than setting the width.
+                  left: flying ? `${target.x}px` : `${tile.x}%`,
+                  top: flying ? `${target.y}px` : `${tile.y}%`,
+                  zIndex: 1, // under the drawer fronts, so they slide *inside*
                   fontFamily: HAND,
                   fontSize: "clamp(11.5px, 1.45vw, 14.5px)",
                   fontWeight: 700,
                   lineHeight: 1.1,
                   color: "#3a352a",
+                  // Real Post-its are one square whatever you write on them.
                   width: "clamp(80px, 9.8vw, 102px)",
                   height: "clamp(80px, 9.8vw, 102px)",
                   display: "flex",
@@ -214,26 +277,24 @@ export default function ChaosHero() {
                   textAlign: "center",
                   padding: "9px 7px",
                   whiteSpace: "normal",
-                  overflowWrap: "break-word",  // break long words only when they truly do not fit
+                  overflowWrap: "break-word",
                   // Faint adhesive strip along the top edge, like the real thing.
-                  background: `linear-gradient(180deg, rgba(0,0,0,0.055) 0 13%, transparent 13%), ${POSTIT[i % POSTIT.length]}`,
+                  background: `linear-gradient(180deg, rgba(0,0,0,0.055) 0 13%, transparent 13%), ${colorOf(i)}`,
                   border: "none",
                   borderRadius: 2,
                   boxShadow: "1px 3px 7px rgba(40,30,10,0.20)",
                   transformOrigin: "center",
-                  // The notes are NOT thrown away. They fly under their door and
-                  // land as a small filed stack — same colour, same handwriting,
-                  // just squared up. The payoff has to be worth the mess.
-                  transform: ordered
-                    ? `translate(-50%,-50%) scale(0.46) rotate(${lean}deg)`
+                  transform: flying
+                    ? "translate(-50%,-50%) scale(0.3)"
                     : `translate(-50%,-50%) rotate(${tile.r}deg)`,
-                  opacity: 1,
-                  // Slight overshoot on landing so each one clicks into place.
+                  // They shrink toward the drawer and only fade at the very end,
+                  // so you watch each one post itself through the front.
+                  opacity: flying ? 0 : 1,
                   transition:
-                    `left 0.9s cubic-bezier(.4,0,.2,1) ${d}ms,` +
-                    `top 0.9s cubic-bezier(.34,1.3,.4,1) ${d}ms,` +
-                    `transform 0.9s cubic-bezier(.34,1.3,.4,1) ${d}ms`,
-                  animationDelay: `${(i % 6) * 0.17}s`,
+                    `left 0.85s cubic-bezier(.45,0,.2,1) ${d}ms,` +
+                    `top 0.85s cubic-bezier(.45,0,.2,1) ${d}ms,` +
+                    `transform 0.85s cubic-bezier(.45,0,.2,1) ${d}ms,` +
+                    `opacity 0.28s ease ${d + 580}ms`,
                   pointerEvents: "none",
                 }}
               >
@@ -241,55 +302,22 @@ export default function ChaosHero() {
               </span>
             );
           })}
-
-          {/* Order layer — the five door boxes the notes gather into. */}
-          <div
-            style={{
-              position: "absolute",
-              inset: 0,
-              zIndex: 1,
-              display: "grid",
-              gridTemplateColumns: "repeat(5, 1fr)",
-              gap: "clamp(8px, 1.4vw, 16px)",
-              alignContent: "center",
-              opacity: ordered ? 1 : 0,
-              transform: ordered ? "scale(1)" : "scale(0.92)",
-              transition: "opacity 0.7s ease 0.5s, transform 0.7s cubic-bezier(.2,.9,.3,1.2) 0.5s",
-              pointerEvents: ordered ? "auto" : "none",
-            }}
-          >
-            {DOORS.map((d) => {
-              const tint = DOOR_TINT[d.key];
-              return (
-                <DoorMini key={d.key} door={d} tint={tint} />
-              );
-            })}
-          </div>
         </div>
 
-        <p
-          style={{
-            fontFamily: SANS,
-            fontSize: 13,
-            color: B.faint,
-            margin: "clamp(20px, 3vw, 30px) 0 0",
-            opacity: ordered ? 1 : 0,
-            transition: "opacity 0.6s ease 0.6s",
-          }}
-        >
-          Nothing got thrown out. It just finally has somewhere to live.
-        </p>
       </div>
 
       <style>{`
         @keyframes chaosJitter {
-          0%   { margin: 0 0 0 0;     }
-          25%  { margin: -5px 0 0 3px;  }
-          50%  { margin: 4px 0 0 -3px;  }
-          75%  { margin: -3px 0 0 2px;  }
-          100% { margin: 0 0 0 0;     }
+          0%   { margin: 0 0 0 0;      }
+          25%  { margin: -5px 0 0 3px; }
+          50%  { margin: 4px 0 0 -3px; }
+          75%  { margin: -3px 0 0 2px; }
+          100% { margin: 0 0 0 0;      }
         }
         .chaos-jitter { animation: chaosJitter 1.7s ease-in-out infinite; }
+        @media (max-width: 880px) {
+          .cm-stage { grid-template-columns: 1fr !important; min-height: 660px !important; }
+        }
         @media (prefers-reduced-motion: reduce) {
           .chaos-jitter { animation: none; }
         }
@@ -298,55 +326,167 @@ export default function ChaosHero() {
   );
 }
 
-function DoorMini({ door, tint }) {
+// The cabinet — five drawers, one per door. Closed, it's a labelled front.
+// Open, it shows what got filed in there and where that door leads.
+function Cabinet({ openKey, setOpenKey, drawerRefs, ordered }) {
+  return (
+    <div
+      style={{
+        position: "relative",
+        zIndex: 2,
+        alignSelf: "center",
+        background: `linear-gradient(180deg, #ffffff 0%, ${B.paper} 100%)`,
+        border: `2px solid ${B.orange}`,
+        borderRadius: 16,
+        boxShadow:
+          "0 0 22px rgba(0,128,255,0.24), 0 0 52px rgba(0,128,255,0.10), inset 0 0 20px rgba(0,128,255,0.03)",
+        padding: 10,
+        display: "flex",
+        flexDirection: "column",
+        gap: 8,
+        opacity: ordered ? 1 : 0.6,
+        transition: "opacity 0.8s ease",
+      }}
+    >
+      {/* Cabinet top edge — enough to read as an object, not a list of buttons. */}
+      <div
+        aria-hidden="true"
+        style={{
+          height: 6,
+          borderRadius: 3,
+          background: `linear-gradient(90deg, ${B.orange}, ${B.slate})`,
+          opacity: 0.5,
+          marginBottom: 2,
+        }}
+      />
+      {DOORS.map((door, i) => (
+        <Drawer
+          key={door.key}
+          door={door}
+          tint={DOOR_TINT[door.key]}
+          open={openKey === door.key}
+          onToggle={() => setOpenKey(openKey === door.key ? null : door.key)}
+          innerRef={(el) => (drawerRefs.current[i] = el)}
+          filed={TILES.map((t, ti) => ({ ...t, i: ti })).filter((t) => drawerOf(t.i) === i)}
+        />
+      ))}
+    </div>
+  );
+}
+
+function Drawer({ door, tint, open, onToggle, innerRef, filed }) {
   const [hover, setHover] = useState(false);
-  const open = (e) => {
+  const enter = (e) => {
     e.preventDefault();
     if (door.kind === "internal") go(door.to);
     else window.location.href = door.href;
   };
   return (
-    <a
-      href={door.kind === "internal" ? door.to : door.href}
-      onClick={open}
-      onMouseEnter={() => setHover(true)}
-      onMouseLeave={() => setHover(false)}
-      style={{
-        display: "flex",
-        flexDirection: "column",
-        gap: 6,
-        textDecoration: "none",
-        background: tint.tint,
-        border: `1px solid ${tint.line}`,
-        borderRadius: 12,
-        padding: "clamp(12px, 1.6vw, 18px) clamp(8px, 1vw, 12px)",
-        minHeight: "clamp(96px, 13vw, 132px)",
-        boxShadow: hover ? SHADOW_LIFT : SHADOW,
-        transform: hover ? "translateY(-3px)" : "translateY(0)",
-        transition: "transform 0.2s ease, box-shadow 0.2s ease",
-      }}
-    >
-      <span
+    <div ref={innerRef} style={{ position: "relative" }}>
+      <button
+        type="button"
+        onClick={onToggle}
+        onMouseEnter={() => setHover(true)}
+        onMouseLeave={() => setHover(false)}
+        aria-expanded={open}
         style={{
-          fontFamily: SERIF,
-          fontWeight: 600,
-          fontSize: "clamp(15px, 1.9vw, 20px)",
-          color: tint.ink,
-          letterSpacing: "-0.01em",
+          width: "100%",
+          display: "flex",
+          alignItems: "center",
+          gap: 10,
+          cursor: "pointer",
+          textAlign: "left",
+          background: tint.tint,
+          border: `1.5px solid ${tint.line}`,
+          borderRadius: 10,
+          padding: "clamp(11px, 1.5vw, 15px) 14px",
+          boxShadow: open ? `0 0 18px ${tint.ink}44` : SHADOW,
+          transform: open ? "translateX(10px)" : hover ? "translateX(4px)" : "translateX(0)",
+          transition: "transform 0.28s cubic-bezier(.3,1.1,.4,1), box-shadow 0.28s ease",
         }}
       >
-        {door.label}
-      </span>
-      <span
+        <span
+          style={{
+            fontFamily: SERIF,
+            fontWeight: 600,
+            fontSize: "clamp(16px, 1.9vw, 21px)",
+            color: tint.ink,
+            letterSpacing: "-0.01em",
+            flex: 1,
+          }}
+        >
+          {door.label}
+        </span>
+        {/* Drawer handle. */}
+        <span
+          aria-hidden="true"
+          style={{
+            width: 34,
+            height: 7,
+            borderRadius: 4,
+            background: tint.ink,
+            opacity: 0.35,
+            flexShrink: 0,
+          }}
+        />
+      </button>
+
+      {/* Contents — the notes filed here, and where this door goes. */}
+      <div
         style={{
-          fontFamily: SANS,
-          fontSize: "clamp(10px, 1.2vw, 12.5px)",
-          lineHeight: 1.35,
-          color: B.muted,
+          overflow: "hidden",
+          maxHeight: open ? 320 : 0,
+          opacity: open ? 1 : 0,
+          transition: "max-height 0.35s ease, opacity 0.3s ease",
         }}
       >
-        {door.intent}
-      </span>
-    </a>
+        <div style={{ padding: "10px 12px 6px 22px" }}>
+          <div style={{ display: "flex", flexWrap: "wrap", gap: 6, marginBottom: 10 }}>
+            {filed.map((n) => (
+              <span
+                key={n.t}
+                style={{
+                  fontFamily: HAND,
+                  fontSize: 13,
+                  fontWeight: 700,
+                  color: "#3a352a",
+                  background: `linear-gradient(180deg, rgba(0,0,0,0.05) 0 16%, transparent 16%), ${colorOf(n.i)}`,
+                  borderRadius: 2,
+                  padding: "5px 9px 6px",
+                  boxShadow: "1px 2px 4px rgba(40,30,10,0.18)",
+                  transform: `rotate(${n.r / 5}deg)`,
+                }}
+              >
+                {n.t}
+              </span>
+            ))}
+          </div>
+          <p
+            style={{
+              fontFamily: SANS,
+              fontSize: 13.5,
+              lineHeight: 1.5,
+              color: B.muted,
+              margin: "0 0 10px",
+            }}
+          >
+            {door.blurb}
+          </p>
+          <a
+            href={door.kind === "internal" ? door.to : door.href}
+            onClick={enter}
+            style={{
+              fontFamily: SANS,
+              fontSize: 13.5,
+              fontWeight: 700,
+              color: tint.ink,
+              textDecoration: "none",
+            }}
+          >
+            {door.cta} →
+          </a>
+        </div>
+      </div>
+    </div>
   );
 }
