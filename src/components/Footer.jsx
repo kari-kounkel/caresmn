@@ -1,4 +1,4 @@
-import { B, SERIF, SANS } from "../brand";
+import { B, SERIF, SANS, MONO } from "../brand";
 import { go } from "../router";
 
 // Light ecosystem footer — the map of the empire, kept quiet.
@@ -69,9 +69,47 @@ export default function Footer() {
         </div>
 
         <div style={{ height: 1, background: "rgba(255,255,255,0.12)", margin: "28px 0 18px" }} />
-        <div style={{ display: "flex", flexWrap: "wrap", gap: 10, justifyContent: "space-between", fontFamily: SANS, fontSize: 12.5, color: "rgba(255,255,255,0.5)" }}>
-          <span>© {YEAR} CARES Consulting Inc. All rights reserved.</span>
-          <span>Built with intention · caresmn.com</span>
+
+        {/* Signature block — the same pill + IP notice every Kari-built product
+            carries (see SignatureFooter in the cares-works repo).
+
+            PENDING (9/4/2026): Kari has applied for a new EIN under
+            "K Co Creative LLC". Once it is issued, the entity line below
+            changes — and so does the matching line in the cares-works
+            SignatureFooter and anywhere else this boilerplate appears.
+            Change them together; they are supposed to agree. */}
+        <div style={{ textAlign: "center", padding: "18px 0 6px" }}>
+          <div
+            style={{
+              display: "inline-block",
+              padding: "10px 26px",
+              background: `linear-gradient(135deg, ${B.orange}, ${B.slate})`,
+              borderRadius: 100,
+              fontFamily: MONO,
+              fontSize: 11,
+              letterSpacing: "0.2em",
+              color: "#fff",
+              fontWeight: 700,
+              boxShadow: "0 6px 20px rgba(0,128,255,0.35)",
+              marginBottom: 22,
+            }}
+          >
+            BUILT FOR BUSINESS &nbsp;·&nbsp; BACKED BY CARES
+          </div>
+          <div
+            style={{
+              maxWidth: 640,
+              margin: "0 auto",
+              fontFamily: MONO,
+              fontSize: 10,
+              letterSpacing: "0.06em",
+              color: "rgba(255,255,255,0.5)",
+              lineHeight: 1.7,
+            }}
+          >
+            caresmn.com — proprietary property of Kari Hoglund Kounkel LLC &amp; CARES Consulting, Inc.
+            <br />© {YEAR}. All rights reserved.
+          </div>
         </div>
       </div>
     </footer>
