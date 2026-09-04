@@ -198,16 +198,27 @@ export default function ChaosHero() {
                   left: ordered ? `${tx}%` : `${tile.x}%`,
                   top: ordered ? `${ty}%` : `${tile.y}%`,
                   zIndex: ordered ? 3 + slot : 2,
+                  // Real Post-its are all the same square, whatever is written
+                  // on them — so the tile is a fixed square and the text wraps
+                  // and centres inside it rather than setting the width.
                   fontFamily: HAND,
-                  fontSize: "clamp(16px, 3vw, 21px)",
+                  fontSize: "clamp(11.5px, 1.45vw, 14.5px)",
                   fontWeight: 700,
-                  lineHeight: 1.05,
+                  lineHeight: 1.1,
                   color: "#3a352a",
-                  background: POSTIT[i % POSTIT.length],
+                  width: "clamp(80px, 9.8vw, 102px)",
+                  height: "clamp(80px, 9.8vw, 102px)",
+                  display: "flex",
+                  alignItems: "center",
+                  justifyContent: "center",
+                  textAlign: "center",
+                  padding: "9px 7px",
+                  whiteSpace: "normal",
+                  overflowWrap: "break-word",  // break long words only when they truly do not fit
+                  // Faint adhesive strip along the top edge, like the real thing.
+                  background: `linear-gradient(180deg, rgba(0,0,0,0.055) 0 13%, transparent 13%), ${POSTIT[i % POSTIT.length]}`,
                   border: "none",
                   borderRadius: 2,
-                  padding: "12px 16px 14px",
-                  whiteSpace: "nowrap",
                   boxShadow: "1px 3px 7px rgba(40,30,10,0.20)",
                   transformOrigin: "center",
                   // The notes are NOT thrown away. They fly under their door and
