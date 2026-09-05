@@ -335,41 +335,63 @@ function Cabinet({ openKey, setOpenKey, drawerRefs, ordered }) {
         position: "relative",
         zIndex: 2,
         alignSelf: "center",
-        background: `linear-gradient(180deg, #ffffff 0%, ${B.paper} 100%)`,
-        border: `2px solid ${B.orange}`,
-        borderRadius: 16,
-        boxShadow:
-          "0 0 22px rgba(0,128,255,0.24), 0 0 52px rgba(0,128,255,0.10), inset 0 0 20px rgba(0,128,255,0.03)",
-        padding: 10,
-        display: "flex",
-        flexDirection: "column",
-        gap: 8,
-        opacity: ordered ? 1 : 0.6,
+        filter: "drop-shadow(0 18px 30px rgba(15,23,42,0.18)) drop-shadow(0 0 34px rgba(0,128,255,0.16))",
+        opacity: ordered ? 1 : 0.72,
         transition: "opacity 0.8s ease",
       }}
     >
-      {/* Cabinet top edge — enough to read as an object, not a list of buttons. */}
+      {/* TOP SLAB — overhangs the body on both sides. Furniture has a lid. */}
       <div
         aria-hidden="true"
         style={{
-          height: 6,
-          borderRadius: 3,
-          background: `linear-gradient(90deg, ${B.orange}, ${B.slate})`,
-          opacity: 0.5,
-          marginBottom: 2,
+          height: 14,
+          margin: "0 -8px",
+          borderRadius: "6px 6px 2px 2px",
+          background: "linear-gradient(180deg, #f7fafd 0%, #dce5ef 62%, #c3d0de 100%)",
+          borderTop: "1px solid #ffffff",
+          boxShadow: "inset 0 -1px 0 rgba(15,23,42,0.10)",
         }}
       />
-      {DOORS.map((door, i) => (
-        <Drawer
-          key={door.key}
-          door={door}
-          tint={DOOR_TINT[door.key]}
-          open={openKey === door.key}
-          onToggle={() => setOpenKey(openKey === door.key ? null : door.key)}
-          innerRef={(el) => (drawerRefs.current[i] = el)}
-          filed={TILES.map((t, ti) => ({ ...t, i: ti })).filter((t) => drawerOf(t.i) === i)}
-        />
-      ))}
+
+      {/* BODY — one solid carcass. The drawers are cut into it, not stacked on it. */}
+      <div
+        style={{
+          background: "linear-gradient(180deg, #e9eff6 0%, #dbe4ee 100%)",
+          borderLeft: "1px solid #c8d4e2",
+          borderRight: "1px solid #c8d4e2",
+          padding: "7px 7px 8px",
+          display: "flex",
+          flexDirection: "column",
+          gap: 4,
+          // Inner walls, so the drawers read as sunk into a box.
+          boxShadow:
+            "inset 3px 0 6px -3px rgba(15,23,42,0.22), inset -3px 0 6px -3px rgba(15,23,42,0.22)",
+        }}
+      >
+        {DOORS.map((door, i) => (
+          <Drawer
+            key={door.key}
+            door={door}
+            tint={DOOR_TINT[door.key]}
+            open={openKey === door.key}
+            onToggle={() => setOpenKey(openKey === door.key ? null : door.key)}
+            innerRef={(el) => (drawerRefs.current[i] = el)}
+            filed={TILES.map((t, ti) => ({ ...t, i: ti })).filter((t) => drawerOf(t.i) === i)}
+          />
+        ))}
+      </div>
+
+      {/* PLINTH — the base it stands on. Without this it floats. */}
+      <div
+        aria-hidden="true"
+        style={{
+          height: 12,
+          margin: "0 6px",
+          borderRadius: "0 0 4px 4px",
+          background: "linear-gradient(180deg, #c8d4e2 0%, #aebccd 100%)",
+          boxShadow: "inset 0 1px 0 rgba(255,255,255,0.5)",
+        }}
+      />
     </div>
   );
 }
@@ -383,6 +405,9 @@ function Drawer({ door, tint, open, onToggle, innerRef, filed }) {
   };
   return (
     <div ref={innerRef} style={{ position: "relative" }}>
+      {/* DRAWER FACE. Pulls toward you on open — it grows a shade and throws a
+          shadow down onto the drawer below, which is what "out" looks like
+          from straight on. */}
       <button
         type="button"
         onClick={onToggle}
@@ -391,57 +416,85 @@ function Drawer({ door, tint, open, onToggle, innerRef, filed }) {
         aria-expanded={open}
         style={{
           width: "100%",
-          display: "flex",
-          alignItems: "center",
-          gap: 10,
+          display: "block",
           cursor: "pointer",
-          textAlign: "left",
-          background: tint.tint,
-          border: `1.5px solid ${tint.line}`,
-          borderRadius: 10,
-          padding: "clamp(11px, 1.5vw, 15px) 14px",
-          boxShadow: open ? `0 0 18px ${tint.ink}44` : SHADOW,
-          transform: open ? "translateX(10px)" : hover ? "translateX(4px)" : "translateX(0)",
-          transition: "transform 0.28s cubic-bezier(.3,1.1,.4,1), box-shadow 0.28s ease",
+          border: "1px solid #c2cedc",
+          borderRadius: 3,
+          padding: "clamp(12px, 1.6vw, 17px) 14px",
+          background: "linear-gradient(180deg, #ffffff 0%, #f2f6fb 48%, #e4ebf3 100%)",
+          boxShadow: open
+            ? "0 10px 16px -6px rgba(15,23,42,0.32), inset 0 1px 0 #ffffff"
+            : hover
+            ? "0 4px 9px -4px rgba(15,23,42,0.26), inset 0 1px 0 #ffffff"
+            : "inset 0 1px 0 #ffffff, inset 0 -1px 0 rgba(15,23,42,0.06)",
+          transform: open ? "scale(1.035)" : hover ? "scale(1.012)" : "scale(1)",
+          transformOrigin: "center",
+          transition: "transform 0.26s cubic-bezier(.3,1.05,.4,1), box-shadow 0.26s ease",
         }}
       >
+        {/* LABEL HOLDER — the little framed card window every filing cabinet has,
+            centred on the face. This is the detail that says "cabinet". */}
         <span
           style={{
-            fontFamily: SERIF,
-            fontWeight: 600,
-            fontSize: "clamp(16px, 1.9vw, 21px)",
-            color: tint.ink,
-            letterSpacing: "-0.01em",
-            flex: 1,
+            display: "block",
+            width: "min(74%, 210px)",
+            margin: "0 auto",
+            background: tint.tint,
+            border: "1px solid #b9c6d6",
+            borderRadius: 2,
+            boxShadow: "inset 0 1px 2px rgba(15,23,42,0.14), 0 1px 0 #ffffff",
+            padding: "5px 10px 6px",
+            textAlign: "center",
           }}
         >
-          {door.label}
+          <span
+            style={{
+              fontFamily: SANS,
+              fontWeight: 700,
+              fontSize: "clamp(11px, 1.25vw, 13px)",
+              letterSpacing: "0.16em",
+              textTransform: "uppercase",
+              color: tint.ink,
+            }}
+          >
+            {door.label}
+          </span>
         </span>
-        {/* Drawer handle. */}
+
+        {/* PULL — recessed bar under the label. */}
         <span
           aria-hidden="true"
           style={{
-            width: 34,
-            height: 7,
+            display: "block",
+            width: "min(44%, 116px)",
+            height: 8,
+            margin: "9px auto 0",
             borderRadius: 4,
-            background: tint.ink,
-            opacity: 0.35,
-            flexShrink: 0,
+            background: "linear-gradient(180deg, #aebccd 0%, #ccd8e5 55%, #f2f6fb 100%)",
+            boxShadow: "inset 0 1px 2px rgba(15,23,42,0.35), 0 1px 0 #ffffff",
           }}
         />
       </button>
 
-      {/* Contents — the notes filed here, and where this door goes. */}
+      {/* THE INSIDE OF THE DRAWER — dark lip at the top, then what's filed here. */}
       <div
         style={{
           overflow: "hidden",
-          maxHeight: open ? 320 : 0,
+          maxHeight: open ? 340 : 0,
           opacity: open ? 1 : 0,
-          transition: "max-height 0.35s ease, opacity 0.3s ease",
+          transition: "max-height 0.38s ease, opacity 0.3s ease",
         }}
       >
-        <div style={{ padding: "10px 12px 6px 22px" }}>
-          <div style={{ display: "flex", flexWrap: "wrap", gap: 6, marginBottom: 10 }}>
+        <div
+          style={{
+            margin: "2px 4px 4px",
+            borderRadius: "0 0 3px 3px",
+            background: "linear-gradient(180deg, #cfdae7 0%, #eef3f8 14%, #ffffff 100%)",
+            boxShadow: "inset 0 6px 8px -6px rgba(15,23,42,0.45)",
+            padding: "14px 14px 12px",
+          }}
+        >
+          <div style={{ display: "flex", flexWrap: "wrap", gap: 6, marginBottom: 11 }}>
             {filed.map((n) => (
               <span
                 key={n.t}
