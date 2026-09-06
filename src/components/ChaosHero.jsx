@@ -12,15 +12,17 @@ const POSTIT = ["#fff59d", "#ffc9de", "#bfe3ff", "#c8f3c0", "#ffd59e", "#e6d2ff"
 // scatter reads the same every load. x/y are percentages of the stage; they sit
 // over the left-hand "desk" so the cabinet on the right stays clear.
 const TILES = [
-  { t: "Payroll",      x: 12, y: 8,  r: -11 },
-  { t: "Spreadsheets", x: 46, y: 6,  r: 9 },
-  { t: "Invoices",     x: 76, y: 12, r: -6 },
-  { t: "Passwords",    x: 8,  y: 40, r: 7 },
-  { t: "Receipts",     x: 80, y: 44, r: 12 },
-  { t: "Contracts",    x: 10, y: 74, r: -9 },
-  { t: "Onboarding",   x: 40, y: 86, r: 6 },
-  { t: "SOPs",         x: 72, y: 80, r: -13 },
-  { t: "Emails",       x: 24, y: 22, r: 14 },
+  // All nine live on the desk: x stays under ~56% so nothing drifts behind the
+  // cabinet, and the band around x 20-42 / y 38-64 is left clear for the CTA.
+  { t: "Payroll",      x:  8, y:  8, r: -11 },
+  { t: "Spreadsheets", x: 38, y:  6, r: 9 },
+  { t: "Invoices",     x: 54, y: 20, r: -6 },
+  { t: "Passwords",    x:  6, y: 40, r: 7 },
+  { t: "Receipts",     x: 50, y: 52, r: 12 },
+  { t: "Contracts",    x:  6, y: 76, r: -9 },
+  { t: "Onboarding",   x: 34, y: 88, r: 6 },
+  { t: "SOPs",         x: 54, y: 84, r: -13 },
+  { t: "Emails",       x: 20, y: 24, r: 14 },
 ];
 
 // Which drawer each note gets filed into — index into DOORS.
@@ -52,7 +54,7 @@ export default function ChaosHero() {
       return;
     }
     // Let the pile sit long enough to register before it tidies itself.
-    const t = setTimeout(() => setOrdered(true), 2100);
+    const t = setTimeout(() => setOrdered(true), 3000);
     return () => clearTimeout(t);
   }, []);
 
