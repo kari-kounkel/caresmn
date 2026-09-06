@@ -12,20 +12,15 @@ const POSTIT = ["#fff59d", "#ffc9de", "#bfe3ff", "#c8f3c0", "#ffd59e", "#e6d2ff"
 // scatter reads the same every load. x/y are percentages of the stage; they sit
 // over the left-hand "desk" so the cabinet on the right stays clear.
 const TILES = [
-  { t: "Sticky notes", x: 11, y: 10, r: -11 },
-  { t: "Spreadsheets", x: 44, y: 6,  r: 9 },
-  { t: "Payroll",      x: 27, y: 30, r: -5 },
-  { t: "SOPs",         x: 57, y: 24, r: 14 },
-  { t: "Prompts",      x: 7,  y: 44, r: 7 },
-  { t: "Invoices",     x: 39, y: 50, r: -13 },
-  { t: "Apps",         x: 23, y: 66, r: 12 },
-  { t: "Emails",       x: 55, y: 70, r: -8 },
-  { t: "Passwords",    x: 9,  y: 82, r: 10 },
-  { t: "Receipts",     x: 35, y: 84, r: -6 },
-  { t: "Tasks",        x: 61, y: 46, r: 13 },
-  { t: "Contracts",    x: 19, y: 52, r: -10 },
-  { t: "Schedules",    x: 47, y: 90, r: 6 },
-  { t: "Onboarding",   x: 64, y: 8,  r: -12 },
+  { t: "Payroll",      x: 12, y: 8,  r: -11 },
+  { t: "Spreadsheets", x: 46, y: 6,  r: 9 },
+  { t: "Invoices",     x: 76, y: 12, r: -6 },
+  { t: "Passwords",    x: 8,  y: 40, r: 7 },
+  { t: "Receipts",     x: 80, y: 44, r: 12 },
+  { t: "Contracts",    x: 10, y: 74, r: -9 },
+  { t: "Onboarding",   x: 40, y: 86, r: 6 },
+  { t: "SOPs",         x: 72, y: 80, r: -13 },
+  { t: "Emails",       x: 24, y: 22, r: 14 },
 ];
 
 // Which drawer each note gets filed into — index into DOORS.
@@ -57,7 +52,7 @@ export default function ChaosHero() {
       return;
     }
     // Let the pile sit long enough to register before it tidies itself.
-    const t = setTimeout(() => setOrdered(true), 4200);
+    const t = setTimeout(() => setOrdered(true), 2100);
     return () => clearTimeout(t);
   }, []);
 
@@ -182,7 +177,7 @@ export default function ChaosHero() {
           style={{
             position: "relative",
             display: "grid",
-            gridTemplateColumns: "minmax(0, 1fr) minmax(250px, 0.66fr)",
+            gridTemplateColumns: "minmax(0, 1fr) minmax(250px, 0.62fr)",
             gap: "clamp(16px, 3vw, 40px)",
             alignItems: "center",
             minHeight: "clamp(340px, 38vw, 440px)",
@@ -252,7 +247,7 @@ export default function ChaosHero() {
           {TILES.map((tile, i) => {
             const target = targets && targets[drawerOf(i)];
             const flying = ordered && !!target;
-            const d = ordered ? i * 22 : 0;
+            const d = ordered ? i * 26 : 0;
             return (
               <span
                 key={tile.t}
@@ -499,15 +494,25 @@ function Drawer({ door, tint, open, onToggle, innerRef, filed }) {
               <span
                 key={n.t}
                 style={{
+                  // Same square as the ones on the desk, just smaller — a filed
+                  // Post-it is still a Post-it, not a text chip.
                   fontFamily: HAND,
-                  fontSize: 13,
+                  fontSize: 10.5,
                   fontWeight: 700,
+                  lineHeight: 1.08,
                   color: "#3a352a",
-                  background: `linear-gradient(180deg, rgba(0,0,0,0.05) 0 16%, transparent 16%), ${colorOf(n.i)}`,
+                  width: 58,
+                  height: 58,
+                  display: "flex",
+                  alignItems: "center",
+                  justifyContent: "center",
+                  textAlign: "center",
+                  padding: "7px 5px 5px",
+                  overflowWrap: "break-word",
+                  background: `linear-gradient(180deg, rgba(0,0,0,0.055) 0 13%, transparent 13%), ${colorOf(n.i)}`,
                   borderRadius: 2,
-                  padding: "5px 9px 6px",
-                  boxShadow: "1px 2px 4px rgba(40,30,10,0.18)",
-                  transform: `rotate(${n.r / 5}deg)`,
+                  boxShadow: "1px 2px 4px rgba(40,30,10,0.20)",
+                  transform: `rotate(${n.r / 4}deg)`,
                 }}
               >
                 {n.t}
