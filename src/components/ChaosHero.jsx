@@ -51,12 +51,25 @@ export default function ChaosHero() {
   useEffect(() => {
     if (prefersReduced()) {
       setOrdered(true);
+      setOpenKey(DOORS[0].key);
       return;
     }
     // Let the pile sit long enough to register before it tidies itself.
     const t = setTimeout(() => setOrdered(true), 3000);
     return () => clearTimeout(t);
   }, []);
+
+  // Once everything has landed, the top drawer eases itself open. Without this
+  // the cabinet looks like decoration — nothing tells you the drawers are yours
+  // to pull. Waits for the last note (stagger + flight) so opening doesn't move
+  // the targets mid-flight.
+  useEffect(() => {
+    if (!ordered || prefersReduced()) return;
+    const t = setTimeout(() => {
+      setOpenKey((k) => (k === null ? DOORS[0].key : k)); // never override a click
+    }, 1400);
+    return () => clearTimeout(t);
+  }, [ordered]);
 
   useLayoutEffect(() => {
     const measure = () => {
@@ -261,13 +274,13 @@ export default function ChaosHero() {
                   top: flying ? `${target.y}px` : `${tile.y}%`,
                   zIndex: 1, // under the drawer fronts, so they slide *inside*
                   fontFamily: HAND,
-                  fontSize: "clamp(11.5px, 1.45vw, 14.5px)",
+                  fontSize: "clamp(9px, 2.2vw, 14.5px)",
                   fontWeight: 700,
                   lineHeight: 1.1,
                   color: "#3a352a",
                   // Real Post-its are one square whatever you write on them.
-                  width: "clamp(80px, 9.8vw, 102px)",
-                  height: "clamp(80px, 9.8vw, 102px)",
+                  width: "clamp(50px, 14vw, 102px)",
+                  height: "clamp(50px, 14vw, 102px)",
                   display: "flex",
                   alignItems: "center",
                   justifyContent: "center",
